@@ -123,12 +123,16 @@
                                         </div>
                                     </label>
                                 </div>
-                                <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-error">Please upload your passport</p>
+                                <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-error">
+                                    <?php echo __( "Please upload your passport", MH_THEME_DOMAIN );  ?>
+                                </p>
                             </div>
                             <div class="flex flex-col lg:flex-row gap-2">
                                 <div class="flex-1">
                                     <input class="mt-2" type="number" name="passportnum" id="passport-num" autocomplete="off" placeholder="Enter Passport Number" />
-                                    <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-num-error">Passport Number is required</p>
+                                    <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-num-error">
+                                        <?php echo __( "Please upload your passport", MH_THEME_DOMAIN );  ?>
+                                    </p>
                                 </div>
                                 <div class="lg:w-1/3">
                                     <input class="mt-2" type="date" name="passportexpnum" id="passport-exp-num" autocomplete="off" />
@@ -171,7 +175,7 @@
                     </form>
                 </div>
             </div>
-            
+
             <!-- signin form -->
 
             <div class="lg:mx-auto flex-1" x-data="{signin: true}">
