@@ -1,51 +1,106 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 h-screen lg:overflow-hidden">
     <div class="lg:h-screen relative hidden lg:block">
         <div class="bg-blue-950 bg-opacity-80 absolute inset-0"></div>
-        <img class="h-full w-full object-cover object-top hidden lg:block" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/mortgage-bg1.jpg" alt="">
+        <img class="h-full w-full object-cover object-top hidden lg:block" src="<?php echo MH_THEME_DIR_URI ."/assets/images/mortgage-bg1.jpg" ?>" alt="">
     </div>
     <div class="px-4 lg:px-20 py-10 lg:overflow-hidden" x-data="{activeTab: 'register'}">
         <div class="grid grid-cols-2 gap-2 z-10 lg:mx-auto bg-white shadow rounded-md p-2 sticky top-0">
-            <button class="btn-btn-full py-2 font-semibold rounded-md capitalize" :class="{'bg-blue-950 text-white': activeTab === 'register'}" @click="activeTab = 'register'">Register</button>
-            <button class="btn-btn-full py-2 font-semibold rounded-md capitalize" :class="{'bg-blue-950 text-white': activeTab === 'signin'}" @click="activeTab = 'signin'">sign in</button>
+            <button class="btn-btn-full py-2 font-semibold rounded-md capitalize" :class="{'bg-blue-950 text-white': activeTab === 'register'}" @click="activeTab = 'register'">
+                <?php echo __( "Register", MH_THEME_DOMAIN );  ?>
+            </button>
+            <button class="btn-btn-full py-2 font-semibold rounded-md capitalize" :class="{'bg-blue-950 text-white': activeTab === 'signin'}" @click="activeTab = 'signin'">
+                <?php echo __( "sign in", MH_THEME_DOMAIN );  ?>
+            </button>
         </div>
         <div class="mt-4 rounded-md">
             <!-- register form -->
             <div class="lg:mx-auto flex-1" :class="activeTab === 'register' ? 'lg:pb-12 form-scroll' : '' " x-data="{register: false}">
                 <div class="bg-white shadow py-5 px-3 lg:p-10 rounded-md lg:overflow-y-auto lg:h-full" x-show="activeTab === 'register'">
-                    <h2 class="font-bold tracking-tight text-2xl mb-4">Create your Profile</h2>
+                    <h2 class="font-bold tracking-tight text-2xl mb-4">
+                        <?php echo __( "Create your Profile", MH_THEME_DOMAIN );  ?>
+                    </h2>
                     <form method="post" class="space-y-3">
                         <div class="space-y-2">
-                            <label for="company-name">Company Name<span class="text-red required">*</span></label>
+                            <label for="company-name">
+                                <?php echo __( "Company Name", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
                             <input class="mt-2 peer" type="text" name="companyname" id="company-name" autocomplete="off" placeholder="Mortgage Pvt Ltd" />
-                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="company-name-error">Company name is required</p>
+                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="company-name-error">
+                                <?php echo __( "Company name is required", MH_THEME_DOMAIN );  ?>
+                            </p>
                         </div>
                         <div class="space-y-2">
-                            <label for="contact-name">Primary Contact Name<span class="text-red required">*</span></label>
+                            <label for="contact-name">
+                                <?php echo __( "Primary Contact Name", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
                             <input class="mt-2 peer" type="text" name="contactname" id="contact-name" autocomplete="off" placeholder="Contact Name" />
-                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="contact-name-error">Primary contact name is required</p>
+                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="contact-name-error">
+                                <?php echo __( "Primary contact name is required", MH_THEME_DOMAIN );  ?>
+                            </p>
                         </div>
                         <div class="space-y-2">
-                            <label for="mobile-num">Mobile Number<span class="text-red required">*</span></label>
+                            <label for="mobile-num">
+                                <?php echo __( "Mobile Number", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
                             <input class="mt-2 peer" type="tel" name="mobile" id="mobile-num" autocomplete="off" placeholder="+61 4XX XXX XXX" />
-                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="mobile-error">Mobile number is required</p>
+                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="mobile-error">
+                                <?php echo __( "Mobile number is required", MH_THEME_DOMAIN );  ?>
+                            </p>
                         </div>
                         <div class="space-y-2">
-                            <label for="email-regis">Email Address<span class="text-red required">*</span></label>
+                            <label for="email-regis">
+                                <?php echo __( "Email Address", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
                             <input class="mt-2 peer" type="email" name="emailregis" id="email-regis" autocomplete="off" placeholder="username@email.com" />
-                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="regis-email-error">Please provide a valid email</p>
+                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="regis-email-error">
+                                <?php echo __( "Please provide a valid email", MH_THEME_DOMAIN );  ?>
+                            </p>
                         </div>
                         <div class="space-y-2">
-                            <label for="password-regis">Password<span class="text-red required">*</span></label>
+                            <label for="password-regis">
+                                <?php echo __( "Password", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
                             <input class="mt-2" type="password" name="passwordregis" id="password-regis" autocomplete="off" placeholder="Password" />
-                            <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="regis-pass-error">Password is required</p>
+                            <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="regis-pass-error">
+                                <?php echo __( "Password is required", MH_THEME_DOMAIN );  ?>
+                            </p>
                         </div>
                         <div class="space-y-2">
-                            <label for="address">Address<span class="text-red required">*</span></label>
+                            <label for="address">
+                                <?php echo __( "Address", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
                             <textarea name="address" id="address" cols="30" rows="10"></textarea>
-                            <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="address-error">Address is required</p>
+                            <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="address-error">
+                                <?php echo __( "Address is required", MH_THEME_DOMAIN );  ?>
+                            </p>
                         </div>
                         <div class="space-y-2">
-                            <label for="passport" class="block text-sm font-medium leading-6 text-gray-900">Passport</label>
+
+                            <label for="passport" class="block text-sm font-medium leading-6 text-gray-900">
+                                <?php echo __( "Passport", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
+
                             <div>
                                 <div class="rounded-lg border border-dashed border-gray-900/25 ">
                                     <label for="passport-upload" class="relative cursor-pointer px-6 py-5 flex flex-col lg:flex-row gap-2 items-center">
@@ -54,11 +109,17 @@
                                         </svg>
                                         <div class="flex flex-col items-center text-center lg:items-start lg:text-left gap-1">
                                             <div class="flex text-sm leading-6 text-gray-600">
-                                                <span class="rounded-md bg-white font-semibold text-blue-950 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-950 focus-within:ring-offset-2 hover:text-blue-900">Upload Passport</span>
+                                                <span class="rounded-md bg-white font-semibold text-blue-950 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-950 focus-within:ring-offset-2 hover:text-blue-900">
+                                                    <?php echo __( "Upload Passport", MH_THEME_DOMAIN );  ?>
+                                                </span>
                                                 <input id="passport-upload" name="passport-upload" type="file" accept=".jpg, .jpeg, .png" class="sr-only">
-                                                <p class="pl-1">or drag and drop</p>
+                                                <p class="pl-1">
+                                                    <?php echo __( "or drag and drop", MH_THEME_DOMAIN );  ?>
+                                                </p>
                                             </div>
-                                            <p class="text-xs leading-5 text-gray-600">PNG, JPG up to 10MB</p>
+                                            <p class="text-xs leading-5 text-gray-600">
+                                                <?php echo __( "PNG, JPG up to 10MB", MH_THEME_DOMAIN );  ?>
+                                            </p>
                                         </div>
                                     </label>
                                 </div>
@@ -110,7 +171,9 @@
                     </form>
                 </div>
             </div>
+            
             <!-- signin form -->
+
             <div class="lg:mx-auto flex-1" x-data="{signin: true}">
                 <div class="bg-white shadow  py-5 px-3 lg:p-10 rounded-md" x-show="activeTab === 'signin'">
                     <h2 class="font-bold tracking-tight text-2xl mb-4">Sign in to your profile</h2>
