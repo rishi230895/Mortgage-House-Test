@@ -2,8 +2,20 @@
     <div class="lg:h-screen relative hidden lg:block">
         <div class="bg-blue-950 bg-opacity-80 absolute inset-0"></div>
         <img class="h-full w-full object-cover object-top hidden lg:block" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/mortgage-bg1.jpg" alt="">
+        <div class="absolute top-9 left-5 text-white hidden lg:block">
+            <a href="#" class="flex items-center justify-center gap-3 uppercase font-black tracking-wide text-lg text-center">
+                <img width="60" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/mortgage.png" alt="">
+                <p class="flex flex-col items-baseline">
+                    <span>Mortgage House</span>
+                    <small class="font-medium capitalize text-xs">Mortgage Maven</small>
+                </p>
+            </a>
+        </div>
+        <div class="absolute bottom-9 left-5 text-white hidden lg:block">
+            <p class="text-sm">Copyright © 2023 Mortgage Pvt Ltd. All Rights Reserved.</p>
+        </div>
     </div>
-    <div class="px-4 lg:px-20 py-10 lg:overflow-hidden" x-data="{activeTab: 'register'}">
+    <div class="px-4 lg:px-12 xl:px-20 py-10 lg:overflow-hidden" x-data="{activeTab: 'register'}">
         <div class="grid grid-cols-2 gap-2 z-10 lg:mx-auto bg-white shadow rounded-md p-2 sticky top-0">
             <button class="btn-btn-full py-2 font-semibold rounded-md capitalize" :class="{'bg-blue-950 text-white': activeTab === 'register'}" @click="activeTab = 'register'">Register</button>
             <button class="btn-btn-full py-2 font-semibold rounded-md capitalize" :class="{'bg-blue-950 text-white': activeTab === 'signin'}" @click="activeTab = 'signin'">sign in</button>
