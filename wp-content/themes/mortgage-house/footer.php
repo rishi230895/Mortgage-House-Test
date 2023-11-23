@@ -1,4 +1,4 @@
-<?php get_footer(); ?>
+<?php  wp_footer();  ?>
 
 <?php if(is_author() || is_front_page()) { ?>
     <footer class="<?php if(is_front_page()){ echo'block lg:hidden';} ?>">
