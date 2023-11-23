@@ -15,6 +15,7 @@
             wp_dequeue_style("twenty-twenty-one-print-style");
             wp_dequeue_style( 'wp-block-library' );
             wp_dequeue_style( 'wp-block-library-theme' );
+            
         }
 
 		add_action("wp_print_styles", "mh_dequeue_default_externals");

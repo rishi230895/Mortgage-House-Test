@@ -11,7 +11,7 @@
     <nav class="bg-white shadow text-blue-950 py-3 lg:hidden">
         <div class="container">
             <a href="#" class="flex items-center justify-center gap-3 uppercase font-black tracking-wide text-lg text-center">
-                <img width="60" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/mortgage.png" alt="">
+                <img width="60" src="<?php echo MH_THEME_DIR_URI ."/assets/images/mortgage.png" ?>" alt="">
                 <p class="flex flex-col items-baseline">
                     <span>
                         <?php echo __("Mortgage House", MH_THEME_DOMAIN ); ?>

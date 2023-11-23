@@ -11,15 +11,18 @@
     if( ! function_exists( 'mh_validate_aus_mobile_numb' ) ) {
         function mh_validate_aus_mobile_numb( $mobile_numb ) {
             if( ! empty ( $mobile_numb ) ) {
-                $pattern = '/^04\d{2}\s?\d{3}\s?\d{3}$/';
-                return preg_match($pattern, $mobile_numb);
+
+                $number = str_replace(' ', '', $number);
+                $pattern = '/^0[2-45]\d{2}\s?\d{3}\s?\d{3}$/';
+
+                return preg_match($pattern, $number);
             }
             return false;
         }
     }
 
     /**
-     *  Validate input has contains specials correct or not.
+     *  Validate input has contains specials chars or not.
      * 
      *  @param string $string
      *  @return boolean
@@ -64,18 +67,21 @@
      */
 
 
-    if (! function_exists('mh_validate_password')) {
-        function mh_validate_password($password) {
+    if ( ! function_exists('mh_validate_password')) {
+        function mh_validate_password( $password ) {
             $min_length = 8;
-            return empty($password) || 
-                   strlen($password) < $min_length ||
-                   !preg_match('/[A-Z]/', $password) ||
-                   !preg_match('/[a-z]/', $password) ||
-                   !preg_match('/[0-9]/', $password) ||
-                   !preg_match('/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/', $password);
+            $max_length = 12;
+
+            return empty($password) ||
+                strlen($password) < $min_length || strlen($password) > $max_length ||
+                !preg_match('/[A-Z]/', $password) ||
+                !preg_match('/[a-z]/', $password) ||
+                !preg_match('/[0-9]/', $password) ||
+                !preg_match('/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/', $password);
         }
     }
-    
+
+
      /**
      *  Validate file size.
      * 
@@ -91,9 +97,9 @@
             $max_size =  $max_size * 1024 * 1024; 
 
             if ( $file['size'] > $max_size ) {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
     }
 
@@ -142,7 +148,7 @@
 
             $attachment_id = '';
 
-            if ( mh_validate_file_max_size( $file ) && mh_validate_file_format( $file , 10  ) ) {
+            if ( mh_validate_file_max_size( $file , 10 ) &&  mh_validate_file_format( $file  ) ) {
 
                 $upload_dir = wp_upload_dir();
                 $upload_path = $upload_dir['path'] . '/';

@@ -19,7 +19,7 @@
                     <h2 class="font-bold tracking-tight text-2xl mb-4">
                         <?php echo __( "Create your Profile", MH_THEME_DOMAIN );  ?>
                     </h2>
-                    <form method="post" class="space-y-3">
+                    <form method="post" class="space-y-3" id="mh-sign-up"  enctype="multipart/form-data" >
                         <div class="space-y-2">
                             <label for="company-name">
                                 <?php echo __( "Company Name", MH_THEME_DOMAIN );  ?>
@@ -136,12 +136,16 @@
                                 </div>
                                 <div class="lg:w-1/3">
                                     <input class="mt-2" type="date" name="passportexpnum" id="passport-exp-num" autocomplete="off" />
-                                    <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-exp-error">Passport expiry date is required</p>
+                                    <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-exp-error">
+                                        <?php echo __( "Passport expiry date is required", MH_THEME_DOMAIN );  ?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <label for="driver-license" class="block text-sm font-medium leading-6 text-gray-900">Driver License</label>
+                            <label for="driver-license" class="block text-sm font-medium leading-6 text-gray-900">
+                                <?php echo __( "Driver License", MH_THEME_DOMAIN );  ?>
+                            </label>
                             <div>
                                 <div class="rounded-lg border border-dashed border-gray-900/25 ">
                                     <label for="driver-license-upload" class="lg:relative cursor-pointer px-6 py-5 flex flex-col lg:flex-row gap-2 items-center">
@@ -150,28 +154,42 @@
                                         </svg>
                                         <div class="flex flex-col items-center text-center lg:items-start lg:text-left gap-1">
                                             <div class="flex text-sm leading-6 text-gray-600">
-                                                <span class="rounded-md bg-white font-semibold text-blue-950 focus-within:outline-none focus-within:ring-2 focus-within:ring-bluetext-blue-950 focus-within:ring-offset-2 hover:text-blue-900">Upload driver license</span>
+                                                <span class="rounded-md bg-white font-semibold text-blue-950 focus-within:outline-none focus-within:ring-2 focus-within:ring-bluetext-blue-950 focus-within:ring-offset-2 hover:text-blue-900">
+                                                    <?php echo __( "Upload driver license", MH_THEME_DOMAIN );  ?>
+                                                </span>
                                                 <input id="driver-license-upload" name="driver-license-upload" type="file" accept=".jpg, .jpeg, .png" class="sr-only">
-                                                <p class="pl-1">or drag and drop</p>
+                                                <p class="pl-1">
+                                                    <?php echo __( "or drag and drop", MH_THEME_DOMAIN );  ?>
+                                                </p>
                                             </div>
-                                            <p class="text-xs leading-5 text-gray-600">PNG, JPG up to 10MB</p>
+                                            <p class="text-xs leading-5 text-gray-600">
+                                                <?php echo __( "PNG, JPG up to 10MB", MH_THEME_DOMAIN );  ?>
+                                            </p>
                                         </div>
                                     </label>
                                 </div>
-                                <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="license-error">Please upload your driving license</p>
+                                <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="license-error">
+                                    <?php echo __( "Please upload your driving license", MH_THEME_DOMAIN );  ?>
+                                </p>
                             </div>
                             <div class="flex flex-col lg:flex-row gap-2">
                                 <div class="flex-1">
                                     <input class="mt-2" type="number" name="dlnum" id="dl-num" autocomplete="off" placeholder="Enter driving license number" />
-                                    <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="dl-num-error">Driving license number is required</p>
+                                    <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="dl-num-error">
+                                        <?php echo __( "Driving license number is required", MH_THEME_DOMAIN );  ?>
+                                    </p>
                                 </div>
                                 <div class="lg:w-1/3">
                                     <input class="mt-2" type="date" name="dlexpnum" id="dl-exp-num" autocomplete="off" />
-                                    <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="dl-exp-error">Driving license expiry date is required</p>
+                                    <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="dl-exp-error">
+                                        <?php echo __( "Driving license expiry date is required", MH_THEME_DOMAIN ); ?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-md btn-blue w-full capitalize">Create profile</button>
+                        <button type="submit" class="btn btn-md btn-blue w-full capitalize">
+                            <?php echo __( "Create profile", MH_THEME_DOMAIN );  ?>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -180,23 +198,49 @@
 
             <div class="lg:mx-auto flex-1" x-data="{signin: true}">
                 <div class="bg-white shadow  py-5 px-3 lg:p-10 rounded-md" x-show="activeTab === 'signin'">
-                    <h2 class="font-bold tracking-tight text-2xl mb-4">Sign in to your profile</h2>
-                    <form method="post" class="space-y-3">
+                    <h2 class="font-bold tracking-tight text-2xl mb-4">
+                        <?php echo __( "Sign in to your profile", MH_THEME_DOMAIN ); ?>
+                    </h2>
+                    <form method="post" class="space-y-3" id="mh-sign-in">
+                        
                         <div class="space-y-2">
-                            <label for="email">Email Address<span class="text-red required">*</span></label>
-                            <input class="mt-2 peer" type="email" name="email" id="email" autocomplete="off" placeholder="username@email.com" />
-                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="signin-email-error">Please provide a valid email</p>
+                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="signin-top-error">
+                            </p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="email">
+                                <?php echo __( "Email Address", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
+                            <input class="mt-2 peer" type="email" name="email" id="mh-email-address" autocomplete="off" placeholder="username@email.com" />
+                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="signin-email-error">
+                                <?php echo __( "Please provide a valid email", MH_THEME_DOMAIN );  ?>
+                            </p>
                         </div>
                         <div class="space-y-2">
-                            <label for="password">Password<span class="text-red required">*</span></label>
-                            <input class="mt-2" type="password" name="password" id="password" autocomplete="off" placeholder="Password" />
-                            <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="signin-pass-error">Password is required</p>
+                            <label for="password">
+                                <?php echo __( "Password", MH_THEME_DOMAIN );  ?>
+                                <span class="text-red required">
+                                    <?php echo __( "*", MH_THEME_DOMAIN );  ?>
+                                </span>
+                            </label>
+                            <input class="mt-2" type="password" name="password" id="mh-password" autocomplete="off" placeholder="Password" />
+                            <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="signin-pass-error">
+                                <?php echo __( "Password is required", MH_THEME_DOMAIN );  ?>
+                            </p>
                         </div>
                         <div class="flex items-center gap-2">
                             <input type="checkbox" name="rememberme" id="remember-me" class="w-4 h-4 rounded text-blue-950 focus:ring-blue-900">
-                            <label for="remember-me" class="capitalize">remember me</label>
+                            <label for="remember-me" class="capitalize">
+                                <?php echo __( "remember me", MH_THEME_DOMAIN );  ?>
+                            </label>
                         </div>
-                        <button type="submit" class="btn btn-md btn-blue w-full capitalize">sign in</button>
+                        <button type="submit" class="btn btn-md btn-blue w-full capitalize" id="mh-signup">
+                            <?php echo __( "sign in", MH_THEME_DOMAIN );  ?>
+                        </button>
                     </form>
                 </div>
             </div>
