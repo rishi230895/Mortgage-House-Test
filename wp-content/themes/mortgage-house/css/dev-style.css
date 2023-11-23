@@ -21,6 +21,16 @@
     label .required{
         @apply text-red-400 no-underline;
     }
+    input:disabled{
+        @apply bg-gray-200 cursor-not-allowed;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        @apply appearance-none m-0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
     input[type="text"],
     input[type="email"],
     input[type="number"],
@@ -80,4 +90,12 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover { 
    @apply bg-opacity-75;
+}
+
+/* mobile code */
+.mobile-code{
+    height: calc(100% - 2px);
+}
+.mobile-code + input[type="tel"]{
+    @apply pl-14;
 }

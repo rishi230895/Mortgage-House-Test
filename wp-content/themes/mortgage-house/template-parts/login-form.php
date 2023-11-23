@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 h-screen lg:overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2 lg:h-screen lg:overflow-hidden">
     <div class="lg:h-screen relative hidden lg:block">
         <div class="bg-blue-950 bg-opacity-80 absolute inset-0"></div>
         <img class="h-full w-full object-cover object-top hidden lg:block" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/mortgage-bg1.jpg" alt="">
@@ -38,7 +38,10 @@
                         </div>
                         <div class="space-y-2">
                             <label for="mobile-num">Mobile Number<span class="text-red required">*</span></label>
-                            <input class="mt-2 peer" type="tel" name="mobile" id="mobile-num" autocomplete="off" placeholder="+61 4XX XXX XXX" />
+                            <span class="relative">
+                                <span class="mobile-code font-medium text-gray-500 h-full rounded-tl rounded-bl absolute top-[1px] left-[1px] p-1 px-2 flex justify-center items-center bg-gray-200">+61</span>
+                                <input class="mt-2 peer" type="tel" name="mobile" id="mobile-num" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" autocomplete="off" placeholder="04XX XXX XXX" />
+                            </span>
                             <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="mobile-error">Mobile number is required</p>
                         </div>
                         <div class="space-y-2">
