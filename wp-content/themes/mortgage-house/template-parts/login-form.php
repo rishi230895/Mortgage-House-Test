@@ -1,9 +1,21 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 h-screen lg:overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2 lg:h-screen lg:overflow-hidden">
     <div class="lg:h-screen relative hidden lg:block">
         <div class="bg-blue-950 bg-opacity-80 absolute inset-0"></div>
         <img class="h-full w-full object-cover object-top hidden lg:block" src="<?php echo MH_THEME_DIR_URI ."/assets/images/mortgage-bg1.jpg" ?>" alt="">
+        <div class="absolute top-9 left-5 text-white hidden lg:block">
+            <a href="#" class="flex items-center justify-center gap-3 uppercase font-black tracking-wide text-lg text-center">
+                <img width="60" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/mortgage.png" alt="">
+                <p class="flex flex-col items-baseline">
+                    <span>Mortgage House</span>
+                    <small class="font-medium capitalize text-xs">Mortgage Maven</small>
+                </p>
+            </a>
+        </div>
+        <div class="absolute bottom-9 left-5 text-white hidden lg:block">
+            <p class="text-sm">Copyright © 2023 Mortgage Pvt Ltd. All Rights Reserved.</p>
+        </div>
     </div>
-    <div class="px-4 lg:px-20 py-10 lg:overflow-hidden" x-data="{activeTab: 'register'}">
+    <div class="px-4 lg:px-12 xl:px-20 py-10 lg:overflow-hidden" x-data="{activeTab: 'register'}">
         <div class="grid grid-cols-2 gap-2 z-10 lg:mx-auto bg-white shadow rounded-md p-2 sticky top-0">
             <button class="btn-btn-full py-2 font-semibold rounded-md capitalize" :class="{'bg-blue-950 text-white': activeTab === 'register'}" @click="activeTab = 'register'">
                 <?php echo __( "Register", MH_THEME_DOMAIN );  ?>
@@ -51,7 +63,10 @@
                                     <?php echo __( "*", MH_THEME_DOMAIN );  ?>
                                 </span>
                             </label>
-                            <input class="mt-2 peer" type="tel" name="mobile" id="mobile-num" autocomplete="off" placeholder="+61 4XX XXX XXX" />
+                            <span class="relative">
+                                <span class="mobile-code font-medium text-gray-500 h-full rounded-tl rounded-bl absolute top-[1px] left-[1px] p-1 px-2 flex justify-center items-center bg-gray-200">+61</span>
+                                <input class="mt-2 peer" type="tel" name="mobile" id="mobile-num" autocomplete="off" placeholder="04XX XXX XXX" />
+                            </span>
                             <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="mobile-error">
                                 <?php echo __( "Mobile number is required", MH_THEME_DOMAIN );  ?>
                             </p>
