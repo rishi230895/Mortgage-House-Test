@@ -1,7 +1,7 @@
 <div class="relative z-10 edit-popup" aria-labelledby="modal-title" role="dialog" aria-modal="true" x-show="open">
     
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="flex min-h-full justify-center p-4 text-center items-center sm:p-0">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"  @click="open = ! open"></div>
             <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
@@ -24,7 +24,7 @@
                             <label for="edit-mobile-num">Mobile Number<span class="text-red required">*</span></label>
                             <span class="relative">
                                 <span class="mobile-code font-medium text-gray-500 h-full rounded-tl rounded-bl absolute top-[1px] left-[1px] p-1 px-2 flex justify-center items-center bg-gray-200">+61</span>
-                                <input class="mt-2 peer" type="tel" name="mobile" id="edit-mobile-num" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" autocomplete="off" placeholder="04XX XXX XXX" />
+                                <input class="mt-2 peer" type="tel" name="mobile" id="edit-mobile-num" autocomplete="off" placeholder="04XX XXX XXX" />
                             </span>
                             <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="edit-mobile-error">Mobile number is required</p>
                         </div>

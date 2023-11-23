@@ -23,6 +23,9 @@
             /** CSS Styles */
 
             wp_enqueue_style( 'prod-style',  MH_THEME_DIR_URI . '/assets/css/production-style.min.css', array(), false );
+            wp_enqueue_style( 'font-awesome-solid', MH_THEME_DIR_URI . './assets/css/fontawesome/css/solid.min.css' ); 
+            wp_enqueue_style( 'font-awesome-brands', MH_THEME_DIR_URI . './assets/css/fontawesome/css/brands.min.css' ); 
+            wp_enqueue_style( 'font-awesome', MH_THEME_DIR_URI . './assets/css/fontawesome/css/fontawesome.min.css' ); 
 
         }
 

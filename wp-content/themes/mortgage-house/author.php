@@ -3,10 +3,10 @@
 ?>
 
 <div class="container">
-    <div class="w-2/3 mx-auto my-12">
-        <div class="flex justify-between items-center mb-4">
+    <div class="lg:w-2/3 mx-auto my-12">
+        <div class="flex flex-col lg:flex-row justify-between items-start gap-4 lg:items-center mb-4">
             <h1 class="text-3xl font-bold tracking-tight text-gray-500">Profile Dashboard</h1>
-            <div class="flex gap-4 items-center">
+            <div class="flex gap-4 w-full lg:w-auto justify-between lg:justify-normal items-center">
                 <label for="toggle" class="flex items-center gap-1 cursor-pointer">
                     <div class="relative">
                         <input type="checkbox" id="toggle" class="hidden peer" checked />
@@ -21,10 +21,10 @@
                 </div>
             </div>
         </div>
-        <div class="bg-white shadow p-10 rounded">
+        <div class="bg-white shadow p-6 lg:p-10 rounded">
             <div class="flex flex-col gap-2 mb-10">
-                <h2 class="text-3xl font-extrabold text-blue-950">Mortgage House Pvt Ltd</h2>
-                <h3 class="text-xl font-bold text-gray-800">Citizen Jane</h3>
+                <h2 class="text-2xl lg:text-3xl font-extrabold text-blue-950">Mortgage House Pvt Ltd</h2>
+                <h3 class="text-xl font-bold text-gray-800">John Peter</h3>
             </div>
             <!-- information block -->
             <div class="space-y-7">

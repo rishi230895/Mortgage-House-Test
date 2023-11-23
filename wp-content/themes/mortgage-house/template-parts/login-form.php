@@ -65,7 +65,7 @@
                             </label>
                             <span class="relative">
                                 <span class="mobile-code font-medium text-gray-500 h-full rounded-tl rounded-bl absolute top-[1px] left-[1px] p-1 px-2 flex justify-center items-center bg-gray-200">+61</span>
-                                <input class="mt-2 peer" type="tel" name="mobile" id="mobile-num" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" autocomplete="off" placeholder="+61 4XX XXX XXX" />
+                                <input class="mt-2 peer" type="tel" name="mobile" id="mobile-num" autocomplete="off" placeholder="04XX XXX XXX" />
                             </span>
                             <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="mobile-error">
                                 <?php echo __( "Mobile number is required", MH_THEME_DOMAIN );  ?>
