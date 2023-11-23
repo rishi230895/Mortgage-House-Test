@@ -129,6 +129,16 @@
                 $fields_error['driving_licence'] = __("File Driving licence should not empty.", MH_THEME_DOMAIN );
             }
 
+
+
+
+
+
+
+
+
+
+
         }
     
         add_action('wp_ajax_register_new_user', 'mh_register_new_user');
@@ -216,7 +226,6 @@
                     $response['success'] = true;
                     $response['fields_error'] = $error_lists;
                     $response['redirect'] = get_author_posts_url( $user->ID );
-            
                 }
             }
            
@@ -255,22 +264,24 @@
                 exit;
             }
 
+           
 
-            $company_name = trim( sanatize_text_field( $_POST['company'] ) );
-            $primary_contact_name = trim ( sanatize_text_field( $_POST['primary_contact_name'] ) );
-            $mobile_number = trim(  sanatize_text_field( $_POST['mobile_number'] ) );
+            $company_name = trim( sanitize_text_field( $_POST['company'] ) );
+            $primary_contact_name = trim ( sanitize_text_field( $_POST['primary_contact_name'] ) );
+            $mobile_number = trim(  sanitize_text_field( $_POST['mobile_number'] ) );
             $email_address = trim($_POST['email_address']);
             $password = $_POST['password'];
             $address = strip_tags ( trim($_POST['address']) );
 
-            $passport_file = $_FILES['passport_file'];
-            $passport_number = trim( sanatize_text_field(  $_POST['passport_number'] ) );
-            $passport_exp_date = trim( sanatize_text_field ( $_POST['passport_exp_date'] ) );
+            $passport_file =  $_FILES['passport_file'];
+            $passport_number = trim( sanitize_text_field(  $_POST['passport_number'] ) );
+            $passport_exp_date = trim( sanitize_text_field ( $_POST['passport_exp_date'] ) );
 
-            $drl_file = $_FILES['drl_file'];
-            $drl_number = trim( sanatize_text_field ( $_POST['drl_number'] ) );
-            $drl_exp_date  = trim( sanatize_text_field ( $_POST['drl_expt_date'] ) );
+            $drl_file =   $_FILES['drl_file'];
+            $drl_number = trim( sanitize_text_field ( $_POST['drl_number'] ) );
+            $drl_exp_date  = trim( sanitize_text_field ( $_POST['drl_expt_date'] ) );
 
+          
         
             /** Validate company name */
 
@@ -285,7 +296,7 @@
                 }
             }
 
-
+          
             /** Validate Primary Contact Name */
 
             if(  empty( $primary_contact_name ) ) {
@@ -313,18 +324,23 @@
                 }
             }
 
+        
+
             /** Validate Email Address */
 
-            if( ! empty( $email_address ) ) {
+            if (empty($email_address)) {
+
                 $is_error = true;
-                $fields_error['email_address'] = __("Email should not empty.", MH_THEME_DOMAIN );
+                $fields_error['email_address'] = __("Email should not be empty.", MH_THEME_DOMAIN);
             }
-            else {
-                if( ! mh_validate_email_address( $email_address  ) ) {
+             else {
+                if (!mh_validate_email_address($email_address)) {
                     $is_error = true;
-                    $fields_error['email_address'] = __("Email should not empty.", MH_THEME_DOMAIN );
+                    $fields_error['email_address'] = __("Invalid email format.", MH_THEME_DOMAIN);
                 }
             }
+
+        
 
             /** Validate password */ 
 
@@ -339,6 +355,11 @@
                 }
             }
 
+            
+
+            echo json_encode( $fields_error );
+            exit;
+        
 
             /** Validate Address  */
 
@@ -353,7 +374,7 @@
             if( empty ( $passport_file ) ) {
 
                 $is_error = true;
-                $fields_error['passport_file'] = __("File Driving licence should not empty.", MH_THEME_DOMAIN );
+                $fields_error['passport_file'] = __("File Passport should not be empty.", MH_THEME_DOMAIN );
 
             }
             else {
@@ -370,13 +391,30 @@
                         $fields_error['passport_file'] = __("Invalid file format, supporting formats (png,jpeg,jpg,pdf).", MH_THEME_DOMAIN );
                     }
                 }
-
+                
             }
 
-            /** Validate mobile  */
 
-            echo json_encode( $fields_error );
+            /** Errors */
+
+            if(  ! $is_error  ) {
+
+                $response['data'] = null;
+                $response['success'] = false;
+                $response['message'] = "";
+                $response['error'] = true;
+                $response['nonce_error'] = false;
+                $response['success'] = false;
+                $response['fields_error'] = $fields_error;
+
+             
+            }
+            
+
+            echo json_encode( $response );
             exit;
+
+
             
         }
 

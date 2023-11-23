@@ -84,11 +84,15 @@ if( signUpForm  ) {
         let password =  formData.get("passwordregis");
         let address =  formData.get("address");
 
-        let passportFile =  formData.get("passport-upload");
+
+        let passportFileInput = document.getElementById("passport-upload");
+        let passportFile = passportFileInput.files[0];
         let passportNumber =  formData.get("passportnum");
         let passportExpDate =  formData.get("passportexpnum");
 
-        let drlFile =  formData.get("driver-license-upload");
+        
+        let drlFileInput = document.getElementById("driver-license-upload");
+        let drlFile = drlFileInput.files[0];
         let drlNumber =  formData.get("dlnum");
         let drlExpDate =  formData.get("dlexpnum");
 
