@@ -1,6 +1,7 @@
+/** loader selector */
+let loader = document.getElementById('loader');
 
 /** Disable the previous dates on register.*/
-
 window.onload = function() {
     var today = new Date().toISOString().split('T')[0];
     var dateInputs = document.querySelectorAll('input[type="date"]');
@@ -199,9 +200,8 @@ function renderSignInErrors( errors, signInErrorIds ) {
 /** Handle Sign In */
 
 async function handleSignIn( adminAjax , postData, nonce ) {
-
+    
     try {
-
         const response = await fetch(adminAjax , {
 
             method: 'POST',
@@ -259,9 +259,9 @@ async function handleSignUp( adminAjax , formData, nonce ) {
 
     formData.append('action', 'sign_up_action');
     formData.append('nonce', nonce);
-
+    loader.classList.remove('hidden');
+    loader.classList.add('flex');
     try {
-        
         const response = await fetch(adminAjax , {
             method: 'POST',
             headers: {
@@ -298,7 +298,11 @@ async function handleSignUp( adminAjax , formData, nonce ) {
         else {
             if( (  data.success ) &&  ( ! data.error )  ) {
                 if( data.redirect ) {
-                    window.location.href = data.redirect;
+                    loader.classList.remove('flex');
+                    loader.classList.add('hidden');
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 300)
                 }
             }
         }
