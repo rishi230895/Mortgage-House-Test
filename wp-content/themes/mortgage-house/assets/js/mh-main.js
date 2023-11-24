@@ -1,3 +1,4 @@
+
 let signInForm = document.getElementById("mh-sign-in");
 let signUpForm = document.getElementById("mh-sign-up");
 let editForm = document.getElementById("mh-edit-details");
@@ -103,7 +104,8 @@ if( signUpForm  ) {
         let drlNumber =  formData.get("dlnum");
         let drlExpDate =  formData.get("dlexpnum");
 
-        let isError = true;
+        let isError = false;
+        
         let errors = {
             companyName:'',
             primaryContactName: '',
@@ -152,6 +154,7 @@ if( signUpForm  ) {
         }
 
         // Validate email address
+
         if( isEmpty( emailAddress) ) {
             isError =  true;
             errors.emailAddress = 'Email Address is mandatory';
@@ -225,7 +228,8 @@ if( signUpForm  ) {
             isError = true;
             errors.drlNumber = 'Driving license number is mandatory';
             console.log(errors.drlNumber);
-        }else{
+        }
+        else{
             if( ! isAlphanumeric(drlNumber) ){
                 isError = true;
                 errors.drlNumber = 'Driving license number must be alphanumeric';
@@ -261,6 +265,8 @@ if( signUpForm  ) {
             formData.append( 'drl_file' , drlFile );
             formData.append( 'drl_number' , drlNumber );
             formData.append( 'drl_expt_date' , drlExpDate );
+            console.log(formData);
+            handleSignUp( mh_main_script_vars.ajax_url, formData , mh_main_script_vars.security );
 
         }else{
             renderSignInErrors(errors, signUpErrorIds);
@@ -298,7 +304,7 @@ if( editForm ) {
         let mobileNumber = sanatizeInput( document.getElementById("edit-mobile-num").value );
         let address = sanatizeInput( document.getElementById("edit-address").value );
 
-        let isError = true;
+        let isError = false;
         let errors = {
             companyName:'',
             primaryContactName: '',
@@ -338,24 +344,21 @@ if( editForm ) {
         }
 
         /** Validate Password */
-        if( isEmpty( password ) ) {
-            isError =  true;
-            errors.password = 'Password is mandatory';
-            console.log(errors.password)
-        }
-        else {
+        
+        if( !isEmpty( password ) ) {
             if( ! validatePassword(password) ) {
                 isError =  true;
                 errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
                 console.log(errors.password)
             } 
         }
-
+    
         // Validate address
-        if( isEmpty(address) ){
+
+        if( isEmpty(address) ) {
             isError = true;
             errors.address = 'Address is mandatory';
-            console.log(errors.address)
+            console.log( errors.address );
         }
 
         /** Post Form Data to the server.  */
@@ -371,7 +374,8 @@ if( editForm ) {
             };
     
             handleProfileUserUpdate(mh_main_script_vars.ajax_url, postObject , mh_main_script_vars.security);
-        }else{
+        }
+        else{
             renderSignInErrors(errors, editErrorIds);
         }
 

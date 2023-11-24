@@ -269,6 +269,17 @@ async function handleSignUp( adminAjax , formData, nonce ) {
         const data = await response.json();
         console.log(data);
 
+        if( ( ! data.success ) &&  ( data.error ) && ( data.fields_error.length > 0 ) ) {
+            
+        }
+        else {
+            if( (  data.success ) &&  ( ! data.error )  ) {
+                if( data.redirect ) {
+                    window.location.href = data.redirect;
+                }
+            }
+        }
+
     }
     catch(error) {
         console.log(error.message);
@@ -308,7 +319,7 @@ async function handleProfileUserUpdate( adminAjax , postData, nonce ) {
         }
         else {
             if( (  data.success ) &&  ( ! data.error )  ) {
-                
+                window.location.reload();
             }
         }
     }
