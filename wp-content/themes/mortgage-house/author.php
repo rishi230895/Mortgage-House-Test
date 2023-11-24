@@ -33,7 +33,7 @@
             <div class="flex gap-4 w-full lg:w-auto justify-between lg:justify-normal items-center">
                 <label for="toggle" class="flex items-center gap-1 cursor-pointer">
                     <div class="relative">
-                        <input type="checkbox" id="toggle" class="hidden peer" checked />
+                        <input type="checkbox" id="toggle" class="hidden peer" <?php echo $switch_two_factor_auth == "on" ? "checked" : ""; ?> />
                         <div class="toggle__line peer-checked:bg-blue-950 w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
                         <div class="toggle__dot absolute peer-checked:translate-x-full transition-transform w-6 h-6 bg-white rounded-full shadow inset-y-1/2 -translate-y-1/2"></div>
                     </div>

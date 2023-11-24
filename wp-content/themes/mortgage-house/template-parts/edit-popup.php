@@ -10,15 +10,10 @@
     $email_address = get_user_meta( $current_user_id, "email_address", true );
     $address = get_user_meta( $current_user_id, "address", true );
     $passport_number = get_user_meta( $current_user_id, "passport_number", true );
-    $passport_exp_date = get_user_meta( $current_user_id, "passport_exp_date", true );
-    $drl_number = get_user_meta( $current_user_id, "drl_number", true );
-    $drl_exp_date = get_user_meta( $current_user_id, "drl_exp_date", true );
+
     $passport_file_attach_id = get_user_meta( $current_user_id, "passport_file_attach_id", true );
     $drl_file_attach_id = get_user_meta( $current_user_id, "drl_file_attach_id", true );
     $switch_two_factor_auth = get_user_meta( $current_user_id, "switch_two_factor_auth", true );
-
-
-    
 
 ?>
 <div class="relative z-10 edit-popup" aria-labelledby="modal-title" role="dialog" aria-modal="true" x-show="open">
@@ -32,7 +27,7 @@
                         <h2 class="font-bold tracking-tight text-2xl"><?php echo __( "Edit your Profile", MH_THEME_DOMAIN );  ?></h2>
                         <button class="py-1 pl-2" type="button" @click="open = ! open"><i class="fa-solid fa-xmark"></i></button>
                     </div>
-                    <form method="post" class="space-y-3" id="mh-edit-details">
+                    <form method="post" class="space-y-3" id="mh-edit-details" autocomplete="off">
                         <div class="space-y-2">
                             <label for="edit-company-name">
                                 <?php echo __( "Company Name", MH_THEME_DOMAIN );  ?>
@@ -65,7 +60,7 @@
                                 <?php echo __( "Email Address", MH_THEME_DOMAIN );  ?>
                                 <span class="text-red required"><?php echo __( "*", MH_THEME_DOMAIN );  ?></span>
                             </label>
-                            <input disabled class="mt-2 peer" type="email" name="emailregis" id="edit-email-regis" autocomplete="off" placeholder="username@email.com" />
+                            <input disabled class="mt-2 peer" type="email" name="emailregis" id="edit-email-regis" autocomplete="off" placeholder="username@email.com" value="<?php echo  $email_address; ?>"/>
                             <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="edit-regis-email-error"><?php echo __( "Please provide a valid email", MH_THEME_DOMAIN );  ?></p>
                         </div>
                         <div class="space-y-2">

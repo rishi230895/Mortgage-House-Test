@@ -134,6 +134,7 @@ function isEmpty( input ) {
 }
 
 /** Validate empty input ftype file */
+
 function isFileInputEmpty(fileInput) {
     return fileInput.files.length === 0;
 }
@@ -221,20 +222,29 @@ async function handleSignIn( adminAjax , postData, nonce ) {
         }
 
         const data = await response.json();
+        console.log(data);
 
         if( data ) {
 
-            if( ( data.success) && ( ! data.error ) && ( !  data.nonce_error ) &&  ( data.fields_error.length === 0 ) ) {
-                window.location.href = data.redirect;
+            if( ( data.data ) && ( data.success) && ( ! data.error ) && ( !  data.nonce_error ) &&  ( data.fields_error.length === 0 )) {
+                document.getElementById("mh-sign-in").style.display = "none";
+                document.getElementById("auth_section").style.display = "flex";
+                document.getElementById("sign-in-title").style.textAlign = "center";
+                document.getElementById("qr-scanner").setAttribute("src",  data.data);
             }
             else {
-
-                if( data.fields_error.length === 0 ) {
-                    renderTopErrors( 'signin-top-error', data.message );
+                if( ( data.success) && ( ! data.error ) && ( !  data.nonce_error ) &&  ( data.fields_error.length === 0 ) ) {
+                    window.location.href = data.redirect;
                 }
                 else {
-                    renderSignInErrors( data.fields_error );
-                }  
+
+                    if( data.fields_error.length === 0 ) {
+                        renderTopErrors( 'signin-top-error', data.message );
+                    }
+                    else {
+                        renderSignInErrors( data.fields_error , signUpErrorIds );
+                    }  
+                }
             }
         }
 
@@ -261,13 +271,26 @@ async function handleSignUp( adminAjax , formData, nonce ) {
         });
 
         if (! response.ok) {
-            // let message = `HTTP error! Status: ${response.status}`;
-            // renderTopErrors( 'signin-top-error', message );
             console.log(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log(data);
+
+
+        if( ( data.success) && ( ! data.error ) && ( !  data.nonce_error ) &&  ( data.fields_error.length === 0 ) ) {
+            if( data.redirect ) {
+                window.location.href = data.redirect;
+            }
+        }
+        else {
+
+            if( data.fields_error.length === 0 ) {
+                renderTopErrors( 'signup-top-error', data.message );
+            }
+            else {
+                renderSignInErrors( data.fields_error );
+            }  
+        }
 
         if( ( ! data.success ) &&  ( data.error ) && ( data.fields_error.length > 0 ) ) {
             
@@ -289,6 +312,7 @@ async function handleSignUp( adminAjax , formData, nonce ) {
 /** Handle Update */
 
 async function handleProfileUserUpdate( adminAjax , postData, nonce ) {
+
     let { companyName, primaryContactName, password, mobileNumber, address } = postData;
 
     try {
@@ -311,14 +335,13 @@ async function handleProfileUserUpdate( adminAjax , postData, nonce ) {
         if (! response.ok) {
             console.log(`HTTP error! Status: ${response.status}`);
         }
-
         const data = await response.json();
 
         if( ( ! data.success ) &&  ( data.error ) && ( data.fields_error.length > 0 ) ) {
-            
+
         }
         else {
-            if( (  data.success ) &&  ( ! data.error )  ) {
+            if( ( data.success ) &&  ( ! data.error )  ) {
                 window.location.reload();
             }
         }

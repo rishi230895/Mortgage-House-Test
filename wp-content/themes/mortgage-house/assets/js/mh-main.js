@@ -8,6 +8,7 @@ let dlFileName = document.getElementById("dl-file-name");
 let dlFileSize = document.getElementById("dl-file-size");
 let passportFileName = document.getElementById("passport-file-name");
 let passportFileSize = document.getElementById("passport-file-size");
+let verifyBtn = document.getElementById("verify-two-fa");
 
 /** Handle Signin Submit */
 
@@ -64,7 +65,7 @@ if( signInForm ) {
                 email: emailAddress,
                 password: password
             };
-            handleSignIn(mh_main_script_vars.ajax_url, postData , mh_main_script_vars.security);
+            handleSignIn( mh_main_script_vars.ajax_url, postData , mh_main_script_vars.security );
         }
         else {
             renderSignInErrors(errors, signInErrorIds);
@@ -81,6 +82,9 @@ if( signUpForm  ) {
     signUpForm.addEventListener('submit', function(e) {
 
         e.preventDefault();
+
+        cleanTopError('signup-top-error');
+        cleanErrors(signUpErrorIds);
 
         var formData = new FormData(signUpForm);
 
@@ -381,4 +385,103 @@ if( editForm ) {
 
     
     })
+}
+
+
+if( verifyBtn ) {
+
+    verifyBtn.addEventListener('click', async function() {
+
+        let otpText = document.getElementById("otp-id").value.trim();
+        let adminAjax = mh_main_script_vars.ajax_url;
+        let nonce = mh_main_script_vars.security;
+
+        let otpErrorRef = document.getElementById("verify-otp-error");
+        otpErrorRef.innerHTML = '';
+        otpErrorRef.classList.add("invisible");
+
+        try {
+            const response = await fetch(adminAjax , {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: 'verify_otp_two_fa',
+                    nonce: nonce, 
+                    otpText : otpText,
+                })    
+            });
+    
+            if (! response.ok) {
+                console.log(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            console.log(data);
+
+            if( ( ! data.success ) &&  ( data.error ) && ( data.fields_error.length == 0 ) ) {
+                otpErrorRef.innerHTML = data.message;
+                otpErrorRef.classList.remove("invisible");
+            }
+            else {
+                if( (  data.success ) &&  ( ! data.error )  ) {
+                    window.location.reload();
+                }
+            }
+        }
+        catch(err) {
+            console.log(err.message);
+        }
+    });
+}
+
+/** It will return check or not specific id  */
+
+function isCheckboxChecked(id) {
+    var checkbox = document.getElementById(id);
+    if (checkbox.checked) {
+        return true;
+    } else {
+        console.log(false);
+        return false;
+    }
+}
+
+let toggle = document.getElementById('toggle');
+
+if( toggle ) {
+    toggle.addEventListener('change', async function(){
+
+        let adminAjax = mh_main_script_vars.ajax_url;
+        let nonce = mh_main_script_vars.security;
+
+        let toggleVal = isCheckboxChecked('toggle');
+
+        try {
+
+            const response = await fetch(adminAjax , {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: 'update_2fa_key',
+                    nonce: nonce, 
+                    data : toggleVal ? "on": "off"
+                })    
+            });
+    
+            if (! response.ok) {
+                console.log(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+  
+        }
+        catch(err) {
+            console.error(err.message);
+        }
+          
+    });
 }

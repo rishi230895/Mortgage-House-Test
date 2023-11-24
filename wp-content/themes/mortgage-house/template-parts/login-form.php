@@ -38,6 +38,12 @@
                         <?php echo __( "Create your Profile", MH_THEME_DOMAIN );  ?>
                     </h2>
                     <form method="post" class="space-y-3" id="mh-sign-up"  enctype="multipart/form-data" >
+
+                        <div class="space-y-2">
+                            <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="signup-top-error">
+                            </p>
+                        </div>
+                        
                         <div class="space-y-2">
                             <label for="company-name">
                                 <?php echo __( "Company Name", MH_THEME_DOMAIN );  ?>
@@ -220,9 +226,11 @@
 
             <div class="lg:mx-auto flex-1" x-data="{signin: true}">
                 <div class="bg-white shadow  py-5 px-3 lg:p-10 rounded-md" x-show="activeTab === 'signin'">
-                    <h2 class="font-bold tracking-tight text-2xl mb-4">
+
+                    <h2 class="font-bold tracking-tight text-2xl mb-4" id="sign-in-title">
                         <?php echo __( "Sign in to your profile", MH_THEME_DOMAIN ); ?>
                     </h2>
+
                     <form method="post" class="space-y-3" id="mh-sign-in">
                         
                         <div class="space-y-2">
@@ -264,8 +272,19 @@
                             <?php echo __( "sign in", MH_THEME_DOMAIN );  ?>
                         </button>
                     </form>
+
+                    <div id="auth_section" class="flex-col items-center gap-4" style="display:none;">
+                        <img src="" class="object-contain" alt="qr-scanner" id="qr-scanner">
+                        <input class="w-full" type="text" id="otp-id" placeholder="Enter the code shown on your google authenticator app">
+                        <button class="w-full btn btn-blue" id="verify-two-fa" type="button"> <?php echo __("Verify", MH_THEME_DOMAIN ); ?>  </button>
+                        <br>
+                        <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="verify-otp-error"></p>
+                        
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+

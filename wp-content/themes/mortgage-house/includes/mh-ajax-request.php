@@ -1,4 +1,6 @@
 <?php
+    require_once __DIR__ . '/vendor/autoload.php';
+    use PHPGangsta\GoogleAuthenticator\GoogleAuthenticator;
 
     /** Sign In */
 
@@ -18,7 +20,7 @@
                 $response['error'] = true;
                 $response['nonce_error'] = true;
                 $response['success'] = false;
-                $response['fields_error'] = false;
+                $response['fields_error'] = array();
                 $response['redirect'] = null;
 
                 echo json_encode( $response );
@@ -51,39 +53,99 @@
     
             if( ! $is_error  ) {
 
-                $credentials = array(
-                    'user_login' => $email,
-                    'user_password' => $password,
-                    'remember' => true,
-                );
+                /** If 2Fa is on  */
 
-                $user = wp_signon($credentials, false);
+                $user_id = '';
+                $is_two_fa_on = '';
 
-                if ( is_wp_error( $user ) ) {
+                
+                $userinfo = get_user_by('email', $email);
 
-                    $response['data'] = null;
-                    $response['success'] = false;
-                    $response['message'] = __( strip_tags( $user->get_error_message()  ), MH_THEME_DOMAIN );
-                    $response['error'] = true;
-                    $response['nonce_error'] = false;
-                    $response['success'] = false;
-                    $response['fields_error'] = $error_lists;
-                    $response['redirect'] = null;
-                    
-                } 
+                if( $userinfo  ) {
+                    $user_id = $userinfo ->ID;
+                    $is_two_fa_on = get_user_meta($user_id, 'switch_two_factor_auth', true );
+                }
+
+
+                if( $is_two_fa_on && $is_two_fa_on == "on" ) {
+
+                    $user = wp_authenticate_username_password(null,  $email, $password);
+
+                    if ( is_wp_error( $user ) ) {
+
+                        $response['data'] = null;
+                        $response['success'] = false;
+                        $response['message'] = __( strip_tags( $user->get_error_message()  ), MH_THEME_DOMAIN );
+                        $response['error'] = true;
+                        $response['nonce_error'] = false;
+                        $response['success'] = false;
+                        $response['fields_error'] = $error_lists;
+                        $response['redirect'] = null;
+                        
+                    } 
+                    else {
+
+                        /** User Authenticated  */                    
+
+                        session_start();
+
+                        $ga = new PHPGangsta_GoogleAuthenticator();
+                        $secret = $ga->createSecret();
+                        $qrCodeUrl = $ga->getQRCodeGoogleUrl('Mortgage House', $secret );
+                        $onecode = $ga->getCode($secret);
+
+                        $_SESSION["secret"] = $secret;
+                        $_SESSION["qrcode"] = $qrCodeUrl;
+                        $_SESSION["onecode"] = $onecode;
+                        $_SESSION['useremail'] = $email;
+                        $_SESSION['password'] = $password;
+
+                        $response['data'] = $qrCodeUrl;
+                        $response['success'] = true;
+                        $response['message'] = __('Authenticated success.', MH_THEME_DOMAIN );
+                        $response['error'] = false;
+                        $response['nonce_error'] = false;
+                        $response['success'] = true;
+                        $response['fields_error'] = $error_lists;
+                        $response['redirect'] = get_author_posts_url( $user->ID );
+                    }
+                }
                 else {
 
-                    $response['data'] = null;
-                    $response['success'] = true;
-                    $response['message'] = __('Authenticated success.', MH_THEME_DOMAIN );
-                    $response['error'] = false;
-                    $response['nonce_error'] = false;
-                    $response['success'] = true;
-                    $response['fields_error'] = $error_lists;
-                    $response['redirect'] = get_author_posts_url( $user->ID );
+                    $creds = array(
+                        'user_login'    => $email,
+                        'user_password' => $password,
+                        'remember'      => true,
+                    );
+
+                    $user = wp_signon( $creds, false );
+
+                    if ( is_wp_error( $user )) {
+
+                        $response['data'] = null;
+                        $response['success'] = false;
+                        $response['message'] = 'User created ,'. $user->get_error_message();
+                        $response['error'] = true;
+                        $response['nonce_error'] = false;
+                        $response['fields_error'] = $error_lists;
+                        $response['redirect'] = null;
+
+                    } 
+                    else {
+
+                        $response['data'] = null;
+                        $response['success'] = true;
+                        $response['message'] = "Login Success";
+                        $response['error'] = false;
+                        $response['nonce_error'] = false;
+                        $response['fields_error'] = $error_lists;
+                        $response['redirect'] = get_author_posts_url( $user_id );
+                    }
+                    
                 }
+
             }
-           
+        
             echo json_encode( $response );
             exit;
         }
@@ -120,8 +182,7 @@
                 exit;
             }
 
-           
-
+        
             $company_name = trim( sanitize_text_field( $_POST['company_name'] ) );
             $primary_contact_name = trim ( sanitize_text_field( $_POST['primary_contact_name'] ) );
             $mobile_number = trim(  sanitize_text_field( $_POST['mobile_number'] ) );
@@ -142,12 +203,12 @@
 
             if(  empty( $company_name ) ) {
                 $is_error = true;
-                $fields_error['company_name'] = __( "Company name should not be empty.", MH_THEME_DOMAIN );  
+                $fields_error['companyName'] = __( "Company name should not be empty.", MH_THEME_DOMAIN );  
             }
             else {
                 if( mh_validate_special_chars( $company_name ) ) {
                     $is_error = true;
-                    $fields_error['company_name'] = __( "Special chars are not allowed.", MH_THEME_DOMAIN );  
+                    $fields_error['companyName'] = __( "Special chars are not allowed.", MH_THEME_DOMAIN );  
                 }
             }
 
@@ -156,12 +217,12 @@
 
             if(  empty( $primary_contact_name ) ) {
                 $is_error = true;
-                $fields_error['primary_contact_name'] = __( "Primary contact name should not be empty.", MH_THEME_DOMAIN );  
+                $fields_error['primaryContactName'] = __( "Primary contact name should not be empty.", MH_THEME_DOMAIN );  
             }
             else {
                 if( mh_validate_special_chars( $primary_contact_name ) ) {
                     $is_error = true;
-                    $fields_error['primary_contact_name'] = __( "Special chars are not allowed.", MH_THEME_DOMAIN );  
+                    $fields_error['primaryContactName'] = __( "Special chars are not allowed.", MH_THEME_DOMAIN );  
                 }
             }
 
@@ -170,12 +231,12 @@
 
             if(  empty( $mobile_number ) ) {
                 $is_error = true;
-                $fields_error['mobile_number'] = __( "Mobile number should not be empty.", MH_THEME_DOMAIN );  
+                $fields_error['mobileNumber'] = __( "Mobile number should not be empty.", MH_THEME_DOMAIN );  
             }
             else {
                 if( ! mh_validate_aus_mobile_numb( $mobile_number )  ) {
                     $is_error = true;
-                    $fields_error['mobile_number'] = __( "Invalid mobile number format.", MH_THEME_DOMAIN ); 
+                    $fields_error['mobileNumber'] = __( "Invalid mobile number format.", MH_THEME_DOMAIN ); 
                 }
             }
 
@@ -185,12 +246,12 @@
             if (empty($email_address)) {
 
                 $is_error = true;
-                $fields_error['email_address'] = __("Email should not be empty.", MH_THEME_DOMAIN);
+                $fields_error['emailAddress'] = __("Email should not be empty.", MH_THEME_DOMAIN);
             }
              else {
                 if (!mh_validate_email_address($email_address)) {
                     $is_error = true;
-                    $fields_error['email_address'] = __("Invalid email format.", MH_THEME_DOMAIN);
+                    $fields_error['emailAddress'] = __("Invalid email format.", MH_THEME_DOMAIN);
                 }
             } 
 
@@ -219,18 +280,18 @@
 
             if( empty ( $passport_file ) ) {
                 $is_error = true;
-                $fields_error['passport_file'] = __("File Passport should not be empty.", MH_THEME_DOMAIN );
+                $fields_error['passportFile'] = __("File Passport should not be empty.", MH_THEME_DOMAIN );
             }
             else {
 
                 if( ! mh_validate_file_format( $passport_file ) ) {
                     $is_error = true;
-                    $fields_error['passport_file'] = __("Invalid file format, supporting formats (png,jpeg,jpg,pdf).", MH_THEME_DOMAIN );
+                    $fields_error['passportFile'] = __("Invalid file format, supporting formats (png,jpeg,jpg,pdf).", MH_THEME_DOMAIN );
                 }
                 else {
                     if(  mh_validate_file_max_size( $passport_file , 10 ) ) {
                         $is_error = true;
-                        $fields_error['passport_file'] = __("File max size should not not greater than 10", MH_THEME_DOMAIN );
+                        $fields_error['passportFile'] = __("File max size should not not greater than 10", MH_THEME_DOMAIN );
                     }
                 }
             }
@@ -239,12 +300,12 @@
 
             if( empty( $passport_number )) {
                 $is_error = true;
-                $fields_error['passport_number'] = __("Passport number should not be empty.", MH_THEME_DOMAIN );
+                $fields_error['passportNumber'] = __("Passport number should not be empty.", MH_THEME_DOMAIN );
             }
             else {
                 if( ! mh_validate_passport_number( $passport_number) ) {
                     $is_error = true;
-                    $fields_error['passport_number'] = __("Invalid passport number.", MH_THEME_DOMAIN );
+                    $fields_error['passportNumber'] = __("Invalid passport number.", MH_THEME_DOMAIN );
                 }
             }
           
@@ -252,12 +313,12 @@
 
             if ( empty ( $passport_exp_date  )  ) {
                 $is_error = true;
-                $fields_error['passport_exp_date'] = __("Expiry Date should not be empty.", MH_THEME_DOMAIN );
+                $fields_error['passportExpDate'] = __("Expiry Date should not be empty.", MH_THEME_DOMAIN );
             }
             else {
                 if( ! mh_validate_past_date($passport_exp_date) ) {
                     $is_error = true;
-                    $fields_error['passport_exp_date'] = __("Invalid expiry date.", MH_THEME_DOMAIN );
+                    $fields_error['passportExpDate'] = __("Invalid expiry date.", MH_THEME_DOMAIN );
                 }
             }
 
@@ -265,18 +326,18 @@
 
             if( empty ( $drl_file ) ) {
                 $is_error = true;
-                $fields_error['dr_file'] = __("File Driving Licence should not be empty.", MH_THEME_DOMAIN );
+                $fields_error['drlFile'] = __("File Driving Licence should not be empty.", MH_THEME_DOMAIN );
             }
             else {
 
                 if( ! mh_validate_file_format( $drl_file ) ) {
                     $is_error = true;
-                    $fields_error['dr_file'] = __("Invalid file format, supporting formats (png,jpeg,jpg,pdf).", MH_THEME_DOMAIN );
+                    $fields_error['drlFile'] = __("Invalid file format, supporting formats (png,jpeg,jpg,pdf).", MH_THEME_DOMAIN );
                 }
                 else {
                     if(  mh_validate_file_max_size( $drl_file , 10 ) ) {
                         $is_error = true;
-                        $fields_error['dr_file'] = __("File max size should not not greater than 10", MH_THEME_DOMAIN );
+                        $fields_error['drlFile'] = __("File max size should not not greater than 10", MH_THEME_DOMAIN );
                     }
                 }
             }
@@ -285,12 +346,12 @@
 
             if ( empty ( $drl_number )  ) {
                 $is_error = true;
-                $fields_error['dr_license_number'] = __("Driving license number should not be empty.", MH_THEME_DOMAIN );
+                $fields_error['drlNumber'] = __("Driving license number should not be empty.", MH_THEME_DOMAIN );
             }
             else {
                 if ( ! mh_validate_drl( $drl_number ) ) {
                     $is_error = true;
-                    $fields_error['dr_license_number'] = __("Invalid driving license number.", MH_THEME_DOMAIN );
+                    $fields_error['drlNumber'] = __("Invalid driving license number.", MH_THEME_DOMAIN );
                 }
             }
 
@@ -298,12 +359,12 @@
 
             if ( empty ( $drl_exp_date  )  ) {
                 $is_error = true;
-                $fields_error['dr_exp_date'] = __("Expiry date should not be empty.", MH_THEME_DOMAIN );
+                $fields_error['drlExpDate'] = __("Expiry date should not be empty.", MH_THEME_DOMAIN );
             }
             else {
                 if( ! mh_validate_past_date($drl_exp_date) ) {
                     $is_error = true;
-                    $fields_error['dr_exp_date'] = __("Invalid expiry date.", MH_THEME_DOMAIN );
+                    $fields_error['drlExpDate'] = __("Invalid expiry date.", MH_THEME_DOMAIN );
                 }
             }
 
@@ -325,7 +386,7 @@
                     
                     $response['data'] = null;
                     $response['success'] = true;
-                    $response['message'] = "User created successfully";
+                    $response['message'] = "User created successfully.";
                     $response['error'] = false;
                     $response['nonce_error'] = false;
                     $response['fields_error'] = $fields_error;
@@ -358,15 +419,15 @@
                     add_user_meta( $user_id ,'drl_number', $drl_number );
                     add_user_meta( $user_id ,'drl_exp_date', $drl_exp_date );
 
-                    add_user_meta( $user_id ,'switch_two_factor_auth', "off" );
+                    add_user_meta( $user_id ,'switch_two_factor_auth', "on" );
 
                     $creds = array(
-                        'user_login'    => $email_address, // Assuming email is used for login
+                        'user_login'    => $email_address,
                         'user_password' => $password,
                         'remember'      => true,
                     );
 
-                    $user = wp_signon($creds, false);
+                    $user = wp_signon( $creds, false );
 
                     if ( is_wp_error( $user )) {
 
@@ -380,6 +441,7 @@
 
                     } 
                     else {
+
                         $response['data'] = null;
                         $response['success'] = true;
                         $response['message'] = "User created.";
@@ -439,7 +501,6 @@
                 $response['message'] = __("Invalid Request.", MH_THEME_DOMAIN );
                 $response['error'] = true;
                 $response['nonce_error'] = true;
-                $response['success'] = false;
                 $response['fields_error'] = $fields_error;
                 $response['redirect'] = null;
     
@@ -487,12 +548,14 @@
             }
     
             /** Validate Mobile */
+
             if( empty( $address ) ) {
                 $is_error = true;
                 $fields_error['address'] = __("Address should not be empty.", MH_THEME_DOMAIN );
             }
     
             /** Validate Password  */
+
             if( ! empty( $password ) ) {
                 if ( ! mh_validate_password( $password ) ) {
                     $is_error = true;
@@ -500,7 +563,6 @@
                 }
             }
            
-    
             if( $is_error ) {
                 $response['data'] = null;
                 $response['success'] = false;
@@ -583,39 +645,137 @@
     }
     
 
-    /** Logout User After 3 min */
+/** Verify OTP  */
 
-    // if( ! function_exists( "mh_handle_logout_user" ) ) {
+if( ! function_exists("mh_verify_otp")  )  {
 
-    //    function mh_handle_logout_user() {
+    function mh_verify_otp() {
 
-    //     if ( ! isset($_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'mh-nonce') ) {
+        $response = array();
+        $fields_error = array();
+        $is_error = false;
+
+        $ga = new PHPGangsta_GoogleAuthenticator();
+        $secret = $ga->createSecret();
+
+        /** Verify nonce  */
     
-    //         $response['data'] = null;
-    //         $response['success'] = false;
-    //         $response['message'] = __("Invalid Request.", MH_THEME_DOMAIN );
-    //         $response['error'] = true;
-    //         $response['nonce_error'] = true;
-    //         $response['fields_error'] = $fields_error;
-    //         $response['redirect'] = null;
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mh-nonce')) {
+    
+            $response['data'] = null;
+            $response['success'] = false;
+            $response['message'] = __("Invalid Request.", MH_THEME_DOMAIN);
+            $response['error'] = true;
+            $response['nonce_error'] = true;
+            $response['fields_error'] = $fields_error;
+            $response['redirect'] = null;
+    
+            echo json_encode($response);
+            exit;
+        }
+    
+        session_start();
+        
+        $otp_text = trim($_POST["otpText"]);
+        $onecode = $_SESSION["onecode"];
 
-    //         echo json_encode( $response );
-    //         exit;
-    //     }
-    //         wp_logout();
-    //         $response['data'] = null;
-    //         $response['success'] = true;
-    //         $response['message'] = "";
-    //         $response['error'] = false;
-    //         $response['nonce_error'] = false;
-    //         $response['fields_error'] = [];
-    //         $response['redirect'] = home_url();
+        $checkResult = $ga->verifyCode($secret, $onecode, 2);
+    
+        if (  $onecode ) {
+  
+            $creds = array(
+                'user_login'    => $_SESSION['useremail'],
+                'user_password' => $_SESSION['password'],
+                'remember'      => true,
+            );
+    
+            $user = wp_signon($creds, false);
+    
+            if ( is_wp_error($user) ) {
+    
+                $response['data'] = null;
+                $response['success'] = false;
+                $response['message'] = $user->get_error_message();
+                $response['error'] = true;
+                $response['nonce_error'] = false;
+                $response['fields_error'] = $fields_error;
+                $response['redirect'] = null;
 
-    //         echo json_encode( $response );
-    //         exit;
+            } 
+            else {
+    
+                $response['data'] = null;
+                $response['success'] = true;
+                $response['message'] = "Verified.";
+                $response['error'] = false;
+                $response['nonce_error'] = false;
+                $response['fields_error'] = $fields_error;
+                $response['redirect'] = get_author_posts_url($user->ID);
+            }
+        } 
+        else {
+    
+            $response['data'] = null;
+            $response['success'] = false;
+            $response['message'] = __("Passcode not match.", MH_THEME_DOMAIN);
+            $response['error'] = true;
+            $response['nonce_error'] = true;
+            $response['fields_error'] = $fields_error;
+            $response['redirect'] = null;
+        }
+       
+        status_header(200);
 
-    //    }
+        unset($_SESSION["secret"]);
+        unset($_SESSION["qrcode"]);
+        unset($_SESSION["onecode"]);
+        unset($_SESSION['useremail']);
+        unset($_SESSION['password']);
+        session_destroy();
 
-    //    add_action('wp_ajax_logout_session', 'mh_handle_logout_user');
-    //    add_action('wp_ajax_nopriv_logout_session', 'mh_handle_logout_user');
-    // }
+        echo json_encode($response);
+        exit;
+    }
+    
+    add_action('wp_ajax_verify_otp_two_fa', 'mh_verify_otp');
+    add_action('wp_ajax_nopriv_verify_otp_two_fa', 'mh_verify_otp');
+
+}
+
+/** update two fa meta key  */
+
+if( ! function_exists('mh_update_2fa_key') ) {
+
+    function mh_update_2fa_key () {
+
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mh-nonce')) {
+    
+            $response['data'] = null;
+            $response['success'] = false;
+            $response['message'] = __("Invalid Request.", MH_THEME_DOMAIN);
+            $response['error'] = true;
+            $response['nonce_error'] = true;
+            $response['fields_error'] = $fields_error;
+            $response['redirect'] = null;
+    
+            echo json_encode($response);
+            exit;
+        }
+
+        $toggle = trim($_POST['data']);
+
+        if( get_user_meta(get_current_user_id(), 'switch_two_factor_auth', true) ) {
+            update_user_meta( get_current_user_id(), 'switch_two_factor_auth', $toggle );
+        }
+        else {
+            add_user_meta( get_current_user_id() , 'switch_two_factor_auth', $toggle );
+        }
+
+        echo json_encode('success');
+        exit;
+    
+    }
+
+    add_action('wp_ajax_update_2fa_key', 'mh_update_2fa_key');
+    add_action('wp_ajax_nopriv_update_2fa_key', 'mh_update_2fa_key');
+}
