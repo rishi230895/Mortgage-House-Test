@@ -1,5 +1,29 @@
 <?php 
+    
+    if ( ! is_user_logged_in() ) {
+        wp_safe_redirect( home_url() );
+        exit; 
+    }
+
     get_header();
+
+    $current_user_id = get_current_user_id();
+
+    /** Get user information */
+
+    $company_name = get_user_meta( $current_user_id, "company_name", true );
+    $primary_contact_name = get_user_meta( $current_user_id, "primary_contact_name", true );
+    $mobile_number = get_user_meta( $current_user_id, "mobile_number", true );
+    $email_address = get_user_meta( $current_user_id, "email_address", true );
+    $address = get_user_meta( $current_user_id, "address", true );
+    $passport_number = get_user_meta( $current_user_id, "passport_number", true );
+    $passport_exp_date = get_user_meta( $current_user_id, "passport_exp_date", true );
+    $drl_number = get_user_meta( $current_user_id, "drl_number", true );
+    $drl_exp_date = get_user_meta( $current_user_id, "drl_exp_date", true );
+    $passport_file_attach_id = get_user_meta( $current_user_id, "passport_file_attach_id", true );
+    $drl_file_attach_id = get_user_meta( $current_user_id, "drl_file_attach_id", true );
+    $switch_two_factor_auth = get_user_meta( $current_user_id, "switch_two_factor_auth", true );
+    
 ?>
 
 <div class="container">
@@ -23,52 +47,93 @@
         </div>
         <div class="bg-white shadow p-6 lg:p-10 rounded">
             <div class="flex flex-col gap-2 mb-10">
-                <h2 class="text-2xl lg:text-3xl font-extrabold text-blue-950">Mortgage House Pvt Ltd</h2>
-                <h3 class="text-xl font-bold text-gray-800">John Peter</h3>
+                <h2 class="text-2xl lg:text-3xl font-extrabold text-blue-950">
+                    <?php echo __(ucwords( $company_name ), MH_THEME_DOMAIN ); ?>
+                </h2>
+                <h3 class="text-xl font-bold text-gray-800">
+                    <?php echo __(ucwords( $primary_contact_name ), MH_THEME_DOMAIN ); ?>
+                </h3>
             </div>
             <!-- information block -->
             <div class="space-y-7">
                 <!-- general information -->
                 <div>
-                    <h4 class="text-lg font-semibold text-gray-800 border-b border-b-gray-300 pb-2">General Information</h4>
+                    <h4 class="text-lg font-semibold text-gray-800 border-b border-b-gray-300 pb-2">
+                        
+                        <?php echo __('General Information', MH_THEME_DOMAIN ); ?>
+                    </h4>
                     <ul class="flex flex-col gap-y-3 text-base py-5 last:pb-0">
                         <li class="flex items-baseline gap-2">
                             <i class="fa-solid fa-phone text-gray-500 w-[20px]"></i>
-                            <a href="tel:0412 345 678"><span>+61 </span>0412 345 678</a>
+                            <a href="<?php echo 'tel:'.$mobile_number; ?>"><span>
+                                <?php echo __("+61", MH_THEME_DOMAIN ); ?>
+                            </span>
+                            <?php echo __( $mobile_number, MH_THEME_DOMAIN ); ?>
+                            </a>
                         </li>
                         <li class="flex items-baseline gap-2">
                             <i class="fa-solid fa-envelope text-gray-500 w-[20px]"></i>
-                            <a href="mailto:mortgage@email.com">mortgage@email.com</a>
+                                <a href="<?php echo 'mailto:'.$email_address; ?>">
+                                <?php echo __( $email_address , MH_THEME_DOMAIN ); ?>
+                            </a>
                         </li>
                         <li class="flex items-baseline gap-2">
                             <i class="fa-solid fa-location-dot text-gray-500 w-[20px]"></i>
-                            <span>93 Seiferts Rd, Adelaide Park, Queensland - 4703</span>
+                            <span>
+                                <?php echo __( $address , MH_THEME_DOMAIN ); ?>
+                            </span>
                         </li>
                     </ul>
                 </div>
                 <!-- document information -->
                 <div>
-                    <h4 class="text-lg font-semibold text-gray-800 border-b border-b-gray-300 pb-2">Document Information</h4>
+                    <h4 class="text-lg font-semibold text-gray-800 border-b border-b-gray-300 pb-2">
+                        <?php echo __( 'Document Information' , MH_THEME_DOMAIN ); ?>
+                    </h4>
                     <ul class="flex flex-col gap-y-6 text-base py-5 last:pb-0">
                         <li class="flex items-baseline gap-2">
                             <i class="fa-solid fa-passport text-gray-500 w-[20px]"></i>
                             <div class="flex flex-col items-start gap-1">
-                                <span class="capitalize"><b>Passport Number: </b>H0170966</span>
-                                <span class="capitalize"><b>Expiry Date: </b>01/03/2024</span>
+                                <span class="capitalize">
+                                    <b>
+                                        <?php echo __( 'Passport Number:' , MH_THEME_DOMAIN ); ?>
+                                    </b>
+                                    <?php echo __( $passport_number , MH_THEME_DOMAIN ); ?>
+                                </span>
+                                <span class="capitalize">
+                                    <b>
+                                        <?php echo __( 'Expiry Date:' , MH_THEME_DOMAIN ); ?>
+                                     </b>
+                                     <?php echo __( $passport_exp_date , MH_THEME_DOMAIN ); ?>
+                                </span>
                                 <div x-data="{ docOpen: false }" @keydown.escape="docOpen = false">
-                                    <button @click="docOpen = ! docOpen" type="button" class="btn btn-sm btn-blue mt-2">View Passport</button>
-                                    <?php get_template_part('template-parts/document-popup', '', array('title' => 'Your Passport')); ?>
+                                    <button @click="docOpen = ! docOpen" type="button" class="btn btn-sm btn-blue mt-2">
+                                        <?php echo __( 'View Passport' , MH_THEME_DOMAIN ); ?>
+                                    </button>
+                                    <?php get_template_part('template-parts/document-popup', '', array('title' => 'Your Passport' , 'attachment_id' => $passport_file_attach_id)); ?>
                                 </div>
                             </div>
                         </li>
                         <li class="flex items-baseline gap-2">
                             <i class="fa-regular fa-id-card text-gray-500 w-[20px]"></i>
                             <div class="flex flex-col items-start gap-1">
-                                <span class="capitalize"><b>Driving License Number: </b>6437772</span>
-                                <span class="capitalize"><b>expiry date: </b>01/03/2024</span>
+                                <span class="capitalize">
+                                    <b> 
+                                        <?php echo __( 'Driving License Number:' , MH_THEME_DOMAIN ); ?>
+                                    </b>
+                                    <?php echo __( $drl_number , MH_THEME_DOMAIN ); ?>
+                                </span>
+                                <span class="capitalize">
+                                    <b>
+                                    <?php echo __( 'expiry date:' , MH_THEME_DOMAIN ); ?>
+                                     </b>
+                                        <?php echo __( $drl_exp_date , MH_THEME_DOMAIN ); ?>
+                                    </span>
                                 <div x-data="{ docOpen: false }" @keydown.escape="docOpen = false">
-                                    <button @click="docOpen = ! docOpen" type="button" class="btn btn-sm btn-blue mt-2">View Driving License</button>
-                                    <?php get_template_part('template-parts/document-popup', '', array('title' => 'Your Driving License')); ?>
+                                    <button @click="docOpen = ! docOpen" type="button" class="btn btn-sm btn-blue mt-2">
+                                        <?php echo __( 'View Driving License' , MH_THEME_DOMAIN ); ?>
+                                    </button>
+                                    <?php get_template_part('template-parts/document-popup', '', array('title' => 'Your Driving License', 'attachment_id' => $drl_file_attach_id)); ?>
                                 </div>
                             </div>
                         </li>

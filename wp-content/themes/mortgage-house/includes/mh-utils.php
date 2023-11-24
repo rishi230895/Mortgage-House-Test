@@ -12,7 +12,7 @@
         function mh_validate_aus_mobile_numb( $mobile_numb ) {
             if( ! empty ( $mobile_numb ) ) {
 
-                $number = str_replace(' ', '', $number);
+                $number = str_replace(' ', '', $mobile_numb);
                 $pattern = '/^0[2-45]\d{2}\s?\d{3}\s?\d{3}$/';
 
                 return preg_match($pattern, $number);
@@ -68,16 +68,37 @@
 
 
     if ( ! function_exists('mh_validate_password')) {
+
         function mh_validate_password( $password ) {
+
             $min_length = 8;
             $max_length = 12;
 
-            return empty($password) ||
-                strlen($password) < $min_length || strlen($password) > $max_length ||
-                !preg_match('/[A-Z]/', $password) ||
-                !preg_match('/[a-z]/', $password) ||
-                !preg_match('/[0-9]/', $password) ||
-                !preg_match('/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/', $password);
+            if (empty($password)) {
+                return false;
+            }
+
+            if (strlen($password) < $min_length || strlen($password) > $max_length) {
+                return false;
+            }
+
+            if (!preg_match('/[A-Z]/', $password)) {
+                return false;
+            }
+
+            if (!preg_match('/[a-z]/', $password)) {
+                return false;
+            }
+
+            if (!preg_match('/[0-9]/', $password)) {
+                return false;
+            }
+
+            if (!preg_match('/[\!\@\#\$\%\^\&\*\(\)\+\{\}\[\]\:\;\<\>\,\.\?\~\\\\-]/', $password)) {
+                return false;
+            }
+
+            return true;
         }
     }
 
@@ -148,7 +169,7 @@
 
             $attachment_id = '';
 
-            if ( mh_validate_file_max_size( $file , 10 ) &&  mh_validate_file_format( $file  ) ) {
+            if ( ! mh_validate_file_max_size( $file , 10 ) &&  mh_validate_file_format( $file  ) ) {
 
                 $upload_dir = wp_upload_dir();
                 $upload_path = $upload_dir['path'] . '/';
@@ -175,13 +196,125 @@
                 else {
                     $attachment_id = '';
                 }
-    
-                return $attachment_id;
-
-            } 
-            else {
-                return '';
             }
+            
+            return $attachment_id;
         }
     }
   
+
+    /**
+     *  Its validate the alpha numeric string
+     * 
+     *  @param string $str
+     *  @return boolean
+     * 
+     */
+
+     if( ! function_exists( "mh_validate_alpha_numeric") )  {
+        function mh_validate_alpha_numeric( $str ) {
+            $pattern = '/^[a-zA-Z0-9]+$/';
+            if( ! empty( $str ) ) {
+                return preg_match($pattern, $str );
+            }
+            return false;
+        }
+     }
+
+    /** 
+     * Australia driving license validation regex
+     *  
+     * @param string $licence_number
+     * @return boolean
+     * 
+     */
+
+     if( ! function_exists("mh_validate_drl")  ) {
+        function mh_validate_drl( $licence_number ) {
+            if (!empty($licence_number)) {
+                if (preg_match("/^([A-Za-z0-9-]{1,12})$/", $licence_number)) {
+                    return true;
+                } 
+                else {
+                    return false;
+                }
+            } 
+            else {
+                return false;
+            }
+        }
+     }
+     
+     /** 
+      *  Validate the past date.
+      *  @param string $date
+      *  @return boolean
+      */
+
+     if ( ! function_exists('mh_validate_past_date') ) {
+        function mh_validate_past_date($date) {
+            if( ! empty($date) ) {
+                
+                $current_date = new DateTime();
+                $current_date->setTime(0, 0, 0);
+                $input_date_time = DateTime::createFromFormat('Y-m-d', $date);
+        
+                if ($input_date_time >= $current_date) {
+                    return true;
+                } 
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+         }
+     }
+
+      /** 
+      *  Validate the passport number.
+      *  @param string $passport_number
+      *  @return boolean
+      */
+
+     if ( ! function_exists('mh_validate_passport_number')) {
+        function mh_validate_passport_number($passport_number) {
+            if (!empty($passport_number)) {
+                if (preg_match("/^([A-Za-z0-9-]{1,12})$/", $passport_number)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+
+     /** 
+      *  Validate the is pdf file .
+      *  @param string $attachment_id
+      *  @return boolean
+      */
+
+
+    if( ! function_exists("mh_check_is_pdf") ) {
+        function mh_check_is_pdf( $attachment_id ) {
+            $mime_type = get_post_mime_type( $attachment_id );
+            return  $mime_type === 'application/pdf' ?  true : false;  
+        }
+    }
+
+    /** 
+      *  Validate the is image file .
+      *  @param string $attachment_id
+      *  @return boolean
+      */
+
+    if( ! function_exists("mh_check_is_image") ) {
+        function mh_check_is_image( $attachment_id ) {
+            $is_image = wp_attachment_is_image( $attachment_id );
+            return $is_image  ?  true : false;  
+        }
+    }

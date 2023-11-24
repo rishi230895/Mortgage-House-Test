@@ -1,18 +1,24 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 lg:h-screen lg:overflow-hidden">
     <div class="lg:h-screen relative hidden lg:block">
         <div class="bg-blue-950 bg-opacity-80 absolute inset-0"></div>
-        <img class="h-full w-full object-cover object-top hidden lg:block" src="<?php echo MH_THEME_DIR_URI ."/assets/images/mortgage-bg1.jpg" ?>" alt="">
+        <img class="h-full w-full object-cover object-top hidden lg:block" src="<?php echo MH_THEME_DIR_URI ."/assets/images/mortgage-bg1.jpg" ?>" alt="site-logo">
         <div class="absolute top-9 left-5 text-white hidden lg:block">
-            <a href="#" class="flex items-center justify-center gap-3 uppercase font-black tracking-wide text-lg text-center">
+            <a href="<?php echo get_site_url(); ?>" class="flex items-center justify-center gap-3 uppercase font-black tracking-wide text-lg text-center">
                 <img width="60" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/mortgage.png" alt="">
                 <p class="flex flex-col items-baseline">
-                    <span>Mortgage House</span>
-                    <small class="font-medium capitalize text-xs">Mortgage Maven</small>
+                    <span>
+                        <?php echo __( " Mortgage House", MH_THEME_DOMAIN );  ?>
+                    </span>
+                    <small class="font-medium capitalize text-xs">
+                        <?php echo __( "Mortgage Maven", MH_THEME_DOMAIN );  ?>
+                    </small>
                 </p>
             </a>
         </div>
         <div class="absolute bottom-9 left-5 text-white hidden lg:block">
-            <p class="text-sm">Copyright © 2023 Mortgage Pvt Ltd. All Rights Reserved.</p>
+            <p class="text-sm">
+                <?php echo __( "Copyright © 2023 Mortgage Pvt Ltd. All Rights Reserved.", MH_THEME_DOMAIN );  ?>
+            </p>
         </div>
     </div>
     <div class="px-4 lg:px-12 xl:px-20 py-10 lg:overflow-hidden" x-data="{activeTab: 'register'}">
@@ -144,7 +150,7 @@
                             </div>
                             <div class="flex flex-col lg:flex-row gap-2">
                                 <div class="flex-1">
-                                    <input class="mt-2" type="number" name="passportnum" id="passport-num" autocomplete="off" placeholder="Enter Passport Number" />
+                                    <input class="mt-2" type="text" name="passportnum" id="passport-num" autocomplete="off" placeholder="Enter Passport Number" />
                                     <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-num-error">
                                         <?php echo __( "Please upload your passport", MH_THEME_DOMAIN );  ?>
                                     </p>
@@ -189,7 +195,7 @@
                             </div>
                             <div class="flex flex-col lg:flex-row gap-2">
                                 <div class="flex-1">
-                                    <input class="mt-2" type="number" name="dlnum" id="dl-num" autocomplete="off" placeholder="Enter driving license number" />
+                                    <input class="mt-2" type="text" name="dlnum" id="dl-num" autocomplete="off" placeholder="Enter driving license number" />
                                     <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="dl-num-error">
                                         <?php echo __( "Driving license number is required", MH_THEME_DOMAIN );  ?>
                                     </p>

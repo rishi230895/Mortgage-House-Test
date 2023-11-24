@@ -1,6 +1,10 @@
 
 let signInForm = document.getElementById("mh-sign-in");
 let signUpForm = document.getElementById("mh-sign-up");
+let updateUserInfoForm = document.getElementById("mh-update-user-info");
+
+
+
 
 /** Handle Signin Submit */
 
@@ -90,9 +94,10 @@ if( signUpForm  ) {
         let passportNumber =  formData.get("passportnum");
         let passportExpDate =  formData.get("passportexpnum");
 
-        
-        let drlFileInput = document.getElementById("driver-license-upload");
+
+        let drlFileInput = document.getElementById("driver-license-upload");    
         let drlFile = drlFileInput.files[0];
+
         let drlNumber =  formData.get("dlnum");
         let drlExpDate =  formData.get("dlexpnum");
 
@@ -121,13 +126,88 @@ if( signUpForm  ) {
             handleSignUp( mh_main_script_vars.ajax_url, formData , mh_main_script_vars.security );
             
             
-
         }
 
-
-
-
-
-    
     })
 }
+
+/** Handle Update  */
+
+if( updateUserInfoForm ) {
+
+    updateUserInfoForm.addEventListener("submit", function(e) {
+
+        e.preventDefault();
+
+        let companyName = sanatizeInput( document.getElementById("edit-company-name").value );
+        let primaryContactName = sanatizeInput( document.getElementById("edit-contact-name").value );
+        let password =  document.getElementById("edit-password-regis").value ;
+        let mobileNumber = sanatizeInput( document.getElementById("edit-mobile-num").value );
+        let address = sanatizeInput( document.getElementById("edit-address").value );
+
+        let postObject = {
+            companyName,
+            primaryContactName,
+            password,
+            mobileNumber,
+            address
+        };
+
+        handleProfileUserUpdate(mh_main_script_vars.ajax_url, postObject , mh_main_script_vars.security);
+
+    });
+
+} 
+
+// var inactivityTimeout = 10; // 3 minutes in seconds
+// var inactivityTimer;
+
+// /** User logout after 3 min */
+
+// function resetInactivityTimer() {
+//     clearTimeout(inactivityTimer);
+//     inactivityTimer = setTimeout(logoutUser, inactivityTimeout * 1000);
+// }
+
+// async function logoutUser() {
+
+//     let adminAjax = mh_main_script_vars.ajax_url;
+//     let nonce = mh_main_script_vars.security;
+
+//     try {
+//         const response = await fetch(adminAjax , {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded',
+//             },
+//             body: new URLSearchParams({
+//                 action: 'logout_session',
+//                 nonce: nonce,
+//             })    
+//         });
+
+//         if (!response.ok) {
+//             console.error(`HTTP error! Status: ${response.status}`);
+//             return; 
+//         }
+
+//         const data = await response.json();
+//         console.log(data);
+
+//         if (data.success && ! data.error) {
+//             window.location.href = data.redirect;
+//         }
+
+//         if (!data.success && data.error) {
+//             console.error(data.message);
+//         }
+
+//     }
+//     catch(err) {
+//         console.log(err.message);
+//     }
+// }
+
+// document.addEventListener('mousemove', resetInactivityTimer);
+// document.addEventListener('keypress', resetInactivityTimer);
+

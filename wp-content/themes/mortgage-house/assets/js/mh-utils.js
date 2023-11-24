@@ -159,6 +159,9 @@ async function handleSignUp( adminAjax , formData, nonce ) {
         
         const response = await fetch(adminAjax , {
             method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
             body: formData,
         });
 
@@ -176,3 +179,48 @@ async function handleSignUp( adminAjax , formData, nonce ) {
         console.log(error.message);
     }
 }
+
+/** Handle Update */
+
+async function handleProfileUserUpdate( adminAjax , postData, nonce ) {
+    let { companyName, primaryContactName, password, mobileNumber, address } = postData;
+
+    try {
+        const response = await fetch(adminAjax , {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                action: 'update_user_info',
+                nonce: nonce,
+                company_name : companyName,
+                primary_contact_name: primaryContactName,
+                password:password,
+                mobile_number:mobileNumber,
+                address: address
+            })    
+        });
+
+        if (! response.ok) {
+            console.log(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if( ( ! data.success ) &&  ( data.error ) && ( data.fields_error.length > 0 ) ) {
+            
+        }
+        else {
+            if( (  data.success ) &&  ( ! data.error )  ) {
+                
+            }
+        }
+    }
+    catch(err) {
+        console.log(err.message);
+    }
+}
+
+
+

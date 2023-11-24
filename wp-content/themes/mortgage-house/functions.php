@@ -14,6 +14,9 @@
 	require_once( MH_THEME_DIR_PATH . "/includes/mh-utils.php" );
 	require_once( MH_THEME_DIR_PATH . "/includes/mh-ajax-request.php" );
 
-  
 
- 
+	/** Hide admin bar for subscribers */
+
+	if (!current_user_can('edit_posts')) {
+		add_filter('show_admin_bar', '__return_false');
+	}
