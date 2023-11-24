@@ -1,10 +1,12 @@
-
 let signInForm = document.getElementById("mh-sign-in");
 let signUpForm = document.getElementById("mh-sign-up");
-let updateUserInfoForm = document.getElementById("mh-update-user-info");
-
-
-
+let editForm = document.getElementById("mh-edit-details");
+let passport = document.getElementById("passport-upload");
+let dLicense = document.getElementById("driver-license-upload");
+let dlFileName = document.getElementById("dl-file-name");
+let dlFileSize = document.getElementById("dl-file-size");
+let passportFileName = document.getElementById("passport-file-name");
+let passportFileSize = document.getElementById("passport-file-size");
 
 /** Handle Signin Submit */
 
@@ -32,7 +34,7 @@ if( signInForm ) {
 
         if( isEmpty( emailAddress) ) {
             isError =  true;
-            errors.email = 'Email Address should not empty.';
+            errors.email = 'Email Address is mandatory';
         }
         else {
             if( ! validateEmailAddress(emailAddress) ) {
@@ -45,12 +47,12 @@ if( signInForm ) {
 
         if( isEmpty( password ) ) {
             isError =  true;
-            errors.password = 'Password should not empty.';
+            errors.password = 'Password is mandatory';
         }
         else {
             if( password.length < 8 ) {
                 isError =  true;
-                errors.password = 'Password atleast 8 characters.';
+                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
             } 
         }
 
@@ -64,7 +66,7 @@ if( signInForm ) {
             handleSignIn(mh_main_script_vars.ajax_url, postData , mh_main_script_vars.security);
         }
         else {
-            renderSignInErrors(errors);
+            renderSignInErrors(errors, signInErrorIds);
         }
 
     });
@@ -102,9 +104,148 @@ if( signUpForm  ) {
         let drlExpDate =  formData.get("dlexpnum");
 
         let isError = true;
+        let errors = {
+            companyName:'',
+            primaryContactName: '',
+            mobileNumber: '',
+            emailAddress: '',
+            password: '',
+            address: '',
+            passportFile: '',
+            passportNumber: '',
+            passportExpDate: '',
+            drlFile: '',
+            drlNumber: '',
+            drlExpDate: ''
+        };
+
         var formData = new FormData();
 
-        if( isError  ) {
+        cleanErrors(signUpErrorIds);
+
+        // Validate company name
+        if( isEmpty(companyName) ) {
+            isError = true;
+            errors.companyName = 'Company name is mandatory';
+            console.log(errors.companyName)
+        }
+
+        // Validate primary contact name
+        if( isEmpty(primaryContactName) ){
+            isError = true;
+            errors.primaryContactName = 'Primary contact name is mandatory';
+            console.log(errors.primaryContactName)
+        }
+
+        // Validate mobile number
+        if( isEmpty( mobileNumber) ) {
+            isError =  true;
+            errors.mobileNumber = 'Mobile Number is mandatory';
+            console.log(errors.mobileNumber);
+        }
+        else {
+            if( ! validateMobileNumber(mobileNumber) ) {
+                isError =  true;
+                errors.mobileNumber = 'Invalid mobile number';
+                console.log(errors.mobileNumber);
+            }
+        }
+
+        // Validate email address
+        if( isEmpty( emailAddress) ) {
+            isError =  true;
+            errors.emailAddress = 'Email Address is mandatory';
+            console.log(errors.emailAddress)
+        }
+        else {
+            if( ! validateEmailAddress(emailAddress) ) {
+                isError =  true;
+                errors.email = 'Invalid email address.';
+                console.log(errors.email)
+            }
+        }
+
+        /** Validate Password */
+        if( isEmpty( password ) ) {
+            isError =  true;
+            errors.password = 'Password is mandatory';
+            console.log(errors.password)
+        }
+        else {
+            if( ! validatePassword(password) ) {
+                isError =  true;
+                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
+                console.log(errors.password)
+            } 
+        }
+
+        // Validate address
+        if( isEmpty(address) ){
+            isError = true;
+            errors.address = 'Address is mandatory';
+            console.log(errors.address)
+        }
+
+        // Validate passport file
+        if( isFileInputEmpty(passport) ){
+            isError = true;
+            errors.passportFile = 'Please upload your passport';
+            console.log(errors.passportFile);
+        }
+
+        // Validate passport number
+        if( isEmpty(passportNumber) ){
+            isError = true;
+            errors.passportNumber = 'Passport number is mandatory';
+            console.log(errors.passportNumber);
+        }else{
+            if( ! isAlphanumeric(passportNumber) ){
+                isError = true;
+                errors.passportNumber = 'Passport number must be alphanumeric';
+                console.log(errors.passportNumber)
+            }
+        }
+
+        // Validate passport expiry date
+        if( isEmpty(passportExpDate) ){
+            isError = true;
+            errors.passportExpDate = 'Please select your passport expiry date';
+            console.log(errors.passportExpDate);
+        }
+
+        // Validate driving license file
+        if( isFileInputEmpty(dLicense) ){
+            isError = true;
+            errors.drlFile = 'Please upload your driving license';
+            console.log(errors.drlFile);
+        }
+
+        // Validate driving license number
+        if( isEmpty(drlNumber) ){
+            isError = true;
+            errors.drlNumber = 'Driving license number is mandatory';
+            console.log(errors.drlNumber);
+        }else{
+            if( ! isAlphanumeric(drlNumber) ){
+                isError = true;
+                errors.drlNumber = 'Driving license number must be alphanumeric';
+                console.log(errors.drlNumber)
+            }
+        }
+
+        // Validate driving license expiry date
+        if( isEmpty(drlExpDate) ){
+            isError = true;
+            errors.drlExpDate = 'Please select your driving license expiry date';
+            console.log(errors.drlExpDate);
+        }
+
+
+
+        /** Post Form Data to the server.  */
+
+
+        if( ! isError && checkErrorsMessages( errors ) ) {
 
             formData.append( 'company_name' , companyName);
             formData.append( 'primary_contact_name' , primaryContactName );
@@ -121,21 +262,33 @@ if( signUpForm  ) {
             formData.append( 'drl_number' , drlNumber );
             formData.append( 'drl_expt_date' , drlExpDate );
 
-            /** Post Form Data to the server.  */
-
-            handleSignUp( mh_main_script_vars.ajax_url, formData , mh_main_script_vars.security );
-            
-            
+        }else{
+            renderSignInErrors(errors, signUpErrorIds);
         }
 
+    
     })
 }
 
-/** Handle Update  */
+/** Handle file upload */
 
-if( updateUserInfoForm ) {
+/** passport upload */
+if( passport ){
+    passport.addEventListener('change', function(e){
+        handleFileUpload(e, passportFileName, passportFileSize)
+    });
+}
 
-    updateUserInfoForm.addEventListener("submit", function(e) {
+/** driving license upload */
+if( dLicense ) {
+    dLicense.addEventListener('change', function(e){
+        handleFileUpload(e, dlFileName, dlFileSize)
+    });
+}
+
+/** Handle Edit details submit */
+if( editForm ) {
+    editForm.addEventListener('submit', function(e) {
 
         e.preventDefault();
 
@@ -145,69 +298,83 @@ if( updateUserInfoForm ) {
         let mobileNumber = sanatizeInput( document.getElementById("edit-mobile-num").value );
         let address = sanatizeInput( document.getElementById("edit-address").value );
 
-        let postObject = {
-            companyName,
-            primaryContactName,
-            password,
-            mobileNumber,
-            address
+        let isError = true;
+        let errors = {
+            companyName:'',
+            primaryContactName: '',
+            mobileNumber: '',
+            password: '',
+            address: ''
         };
 
-        handleProfileUserUpdate(mh_main_script_vars.ajax_url, postObject , mh_main_script_vars.security);
+        cleanErrors(editErrorIds);
 
-    });
+        // Validate company name
+        if( isEmpty(companyName) ) {
+            isError = true;
+            errors.companyName = 'Company name is mandatory';
+            console.log(errors.companyName)
+        }
 
-} 
+        // Validate primary contact name
+        if( isEmpty(primaryContactName) ){
+            isError = true;
+            errors.primaryContactName = 'Primary contact name is mandatory';
+            console.log(errors.primaryContactName)
+        }
 
-// var inactivityTimeout = 10; // 3 minutes in seconds
-// var inactivityTimer;
+        // Validate mobile number
+        if( isEmpty( mobileNumber) ) {
+            isError =  true;
+            errors.mobileNumber = 'Mobile Number is mandatory';
+            console.log(errors.mobileNumber);
+        }
+        else {
+            if( ! validateMobileNumber(mobileNumber) ) {
+                isError =  true;
+                errors.mobileNumber = 'Invalid mobile number';
+                console.log(errors.mobileNumber);
+            }
+        }
 
-// /** User logout after 3 min */
+        /** Validate Password */
+        if( isEmpty( password ) ) {
+            isError =  true;
+            errors.password = 'Password is mandatory';
+            console.log(errors.password)
+        }
+        else {
+            if( ! validatePassword(password) ) {
+                isError =  true;
+                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
+                console.log(errors.password)
+            } 
+        }
 
-// function resetInactivityTimer() {
-//     clearTimeout(inactivityTimer);
-//     inactivityTimer = setTimeout(logoutUser, inactivityTimeout * 1000);
-// }
+        // Validate address
+        if( isEmpty(address) ){
+            isError = true;
+            errors.address = 'Address is mandatory';
+            console.log(errors.address)
+        }
 
-// async function logoutUser() {
+        /** Post Form Data to the server.  */
 
-//     let adminAjax = mh_main_script_vars.ajax_url;
-//     let nonce = mh_main_script_vars.security;
 
-//     try {
-//         const response = await fetch(adminAjax , {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/x-www-form-urlencoded',
-//             },
-//             body: new URLSearchParams({
-//                 action: 'logout_session',
-//                 nonce: nonce,
-//             })    
-//         });
+        if( ! isError && checkErrorsMessages( errors ) ) {
+            let postObject = {
+                companyName,
+                primaryContactName,
+                password,
+                mobileNumber,
+                address
+            };
+    
+            handleProfileUserUpdate(mh_main_script_vars.ajax_url, postObject , mh_main_script_vars.security);
+        }else{
+            renderSignInErrors(errors, editErrorIds);
+        }
 
-//         if (!response.ok) {
-//             console.error(`HTTP error! Status: ${response.status}`);
-//             return; 
-//         }
-
-//         const data = await response.json();
-//         console.log(data);
-
-//         if (data.success && ! data.error) {
-//             window.location.href = data.redirect;
-//         }
-
-//         if (!data.success && data.error) {
-//             console.error(data.message);
-//         }
-
-//     }
-//     catch(err) {
-//         console.log(err.message);
-//     }
-// }
-
-// document.addEventListener('mousemove', resetInactivityTimer);
-// document.addEventListener('keypress', resetInactivityTimer);
-
+    
+    })
+}

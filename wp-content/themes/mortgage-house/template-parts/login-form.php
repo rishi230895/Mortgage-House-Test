@@ -47,7 +47,7 @@
                             </label>
                             <input class="mt-2 peer" type="text" name="companyname" id="company-name" autocomplete="off" placeholder="Mortgage Pvt Ltd" />
                             <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="company-name-error">
-                                <?php echo __( "Company name is required", MH_THEME_DOMAIN );  ?>
+                                <?php echo __( "Company name is mandatory", MH_THEME_DOMAIN );  ?>
                             </p>
                         </div>
                         <div class="space-y-2">
@@ -59,7 +59,7 @@
                             </label>
                             <input class="mt-2 peer" type="text" name="contactname" id="contact-name" autocomplete="off" placeholder="Contact Name" />
                             <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="contact-name-error">
-                                <?php echo __( "Primary contact name is required", MH_THEME_DOMAIN );  ?>
+                                <?php echo __( "Primary contact name is mandatory", MH_THEME_DOMAIN );  ?>
                             </p>
                         </div>
                         <div class="space-y-2">
@@ -70,11 +70,11 @@
                                 </span>
                             </label>
                             <span class="relative">
-                                <span class="mobile-code font-medium text-gray-500 h-full rounded-tl rounded-bl absolute top-[1px] left-[1px] p-1 px-2 flex justify-center items-center bg-gray-200">+61</span>
+                                <span class="mobile-code font-medium text-gray-500 h-full rounded-tl rounded-bl absolute top-[1px] left-[1px] p-1 px-2 flex justify-center items-center bg-gray-200"><?php echo __( "+61", MH_THEME_DOMAIN );  ?></span>
                                 <input class="mt-2 peer" type="tel" name="mobile" id="mobile-num" autocomplete="off" placeholder="04XX XXX XXX" />
                             </span>
                             <p class="invisible peer-invalid:visible text-red-600 font-medium text-[10px] leading-[10px]" id="mobile-error">
-                                <?php echo __( "Mobile number is required", MH_THEME_DOMAIN );  ?>
+                                <?php echo __( "Mobile number is mandatory", MH_THEME_DOMAIN );  ?>
                             </p>
                         </div>
                         <div class="space-y-2">
@@ -98,7 +98,7 @@
                             </label>
                             <input class="mt-2" type="password" name="passwordregis" id="password-regis" autocomplete="off" placeholder="Password" />
                             <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="regis-pass-error">
-                                <?php echo __( "Password is required", MH_THEME_DOMAIN );  ?>
+                                <?php echo __( "Password is mandatory", MH_THEME_DOMAIN );  ?>
                             </p>
                         </div>
                         <div class="space-y-2">
@@ -110,7 +110,7 @@
                             </label>
                             <textarea name="address" id="address" cols="30" rows="10"></textarea>
                             <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="address-error">
-                                <?php echo __( "Address is required", MH_THEME_DOMAIN );  ?>
+                                <?php echo __( "Address is mandatory", MH_THEME_DOMAIN );  ?>
                             </p>
                         </div>
                         <div class="space-y-2">
@@ -122,24 +122,25 @@
                                 </span>
                             </label>
 
-                            <div>
+                            <div class="space-y-2">
                                 <div class="rounded-lg border border-dashed border-gray-900/25 ">
                                     <label for="passport-upload" class="relative cursor-pointer px-6 py-5 flex flex-col lg:flex-row gap-2 items-center">
                                         <svg class="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                             <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
                                         </svg>
                                         <div class="flex flex-col items-center text-center lg:items-start lg:text-left gap-1">
-                                            <div class="flex text-sm leading-6 text-gray-600">
+                                            <input id="passport-upload" name="passport-upload" type="file" accept=".jpg, .jpeg, .png, .pdf" class="sr-only">
+                                            <div id="passport-file-name" class="flex text-sm leading-6 text-gray-600">
                                                 <span class="rounded-md bg-white font-semibold text-blue-950 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-950 focus-within:ring-offset-2 hover:text-blue-900">
                                                     <?php echo __( "Upload Passport", MH_THEME_DOMAIN );  ?>
                                                 </span>
-                                                <input id="passport-upload" name="passport-upload" type="file" accept=".jpg, .jpeg, .png" class="sr-only">
+                                                
                                                 <p class="pl-1">
                                                     <?php echo __( "or drag and drop", MH_THEME_DOMAIN );  ?>
                                                 </p>
                                             </div>
-                                            <p class="text-xs leading-5 text-gray-600">
-                                                <?php echo __( "PNG, JPG up to 10MB", MH_THEME_DOMAIN );  ?>
+                                            <p id="passport-file-size" class="text-xs leading-5 text-gray-600">
+                                                <?php echo __( "PNG, JPG & PDF up to 10MB", MH_THEME_DOMAIN );  ?>
                                             </p>
                                         </div>
                                     </label>
@@ -149,16 +150,16 @@
                                 </p>
                             </div>
                             <div class="flex flex-col lg:flex-row gap-2">
-                                <div class="flex-1">
+                                <div class="flex-1 space-y-2">
                                     <input class="mt-2" type="text" name="passportnum" id="passport-num" autocomplete="off" placeholder="Enter Passport Number" />
                                     <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-num-error">
-                                        <?php echo __( "Please upload your passport", MH_THEME_DOMAIN );  ?>
+                                        <?php echo __( "Passport number is mandatory", MH_THEME_DOMAIN );  ?>
                                     </p>
                                 </div>
-                                <div class="lg:w-1/3">
+                                <div class="lg:w-1/3 space-y-2">
                                     <input class="mt-2" type="date" name="passportexpnum" id="passport-exp-num" autocomplete="off" />
                                     <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="passport-exp-error">
-                                        <?php echo __( "Passport expiry date is required", MH_THEME_DOMAIN );  ?>
+                                        <?php echo __( "Passport expiry date is mandatory", MH_THEME_DOMAIN );  ?>
                                     </p>
                                 </div>
                             </div>
@@ -167,24 +168,24 @@
                             <label for="driver-license" class="block text-sm font-medium leading-6 text-gray-900">
                                 <?php echo __( "Driver License", MH_THEME_DOMAIN );  ?>
                             </label>
-                            <div>
+                            <div class="space-y-2">
                                 <div class="rounded-lg border border-dashed border-gray-900/25 ">
                                     <label for="driver-license-upload" class="lg:relative cursor-pointer px-6 py-5 flex flex-col lg:flex-row gap-2 items-center">
                                         <svg class="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                                             <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
                                         </svg>
                                         <div class="flex flex-col items-center text-center lg:items-start lg:text-left gap-1">
-                                            <div class="flex text-sm leading-6 text-gray-600">
+                                            <input id="driver-license-upload" name="driver-license-upload" type="file" accept=".jpg, .jpeg, .png, .pdf" class="sr-only">
+                                            <div id="dl-file-name" class="flex text-sm leading-6 text-gray-600">
                                                 <span class="rounded-md bg-white font-semibold text-blue-950 focus-within:outline-none focus-within:ring-2 focus-within:ring-bluetext-blue-950 focus-within:ring-offset-2 hover:text-blue-900">
                                                     <?php echo __( "Upload driver license", MH_THEME_DOMAIN );  ?>
                                                 </span>
-                                                <input id="driver-license-upload" name="driver-license-upload" type="file" accept=".jpg, .jpeg, .png" class="sr-only">
                                                 <p class="pl-1">
                                                     <?php echo __( "or drag and drop", MH_THEME_DOMAIN );  ?>
                                                 </p>
                                             </div>
-                                            <p class="text-xs leading-5 text-gray-600">
-                                                <?php echo __( "PNG, JPG up to 10MB", MH_THEME_DOMAIN );  ?>
+                                            <p id="dl-file-size" class="text-xs leading-5 text-gray-600">
+                                                <?php echo __( "PNG, JPG & PDF up to 10MB", MH_THEME_DOMAIN );  ?>
                                             </p>
                                         </div>
                                     </label>
@@ -194,16 +195,16 @@
                                 </p>
                             </div>
                             <div class="flex flex-col lg:flex-row gap-2">
-                                <div class="flex-1">
+                                <div class="flex-1 space-y-2">
                                     <input class="mt-2" type="text" name="dlnum" id="dl-num" autocomplete="off" placeholder="Enter driving license number" />
                                     <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="dl-num-error">
-                                        <?php echo __( "Driving license number is required", MH_THEME_DOMAIN );  ?>
+                                        <?php echo __( "Driving license number is mandatory", MH_THEME_DOMAIN );  ?>
                                     </p>
                                 </div>
-                                <div class="lg:w-1/3">
+                                <div class="lg:w-1/3 space-y-2">
                                     <input class="mt-2" type="date" name="dlexpnum" id="dl-exp-num" autocomplete="off" />
                                     <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="dl-exp-error">
-                                        <?php echo __( "Driving license expiry date is required", MH_THEME_DOMAIN ); ?>
+                                        <?php echo __( "Driving license expiry date is mandatory", MH_THEME_DOMAIN ); ?>
                                     </p>
                                 </div>
                             </div>

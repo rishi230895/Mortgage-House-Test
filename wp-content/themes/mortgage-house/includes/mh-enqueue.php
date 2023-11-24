@@ -10,6 +10,7 @@
 
             /** JS scripts */
             
+            wp_enqueue_script( 'mask-script', MH_THEME_DIR_URI.'/assets/js/jquery.mask.min.js', array(), MH_THEME_VERSION , true);
             wp_enqueue_script( 'alpine-script', MH_THEME_DIR_URI.'/assets/js/mh-alpine.min.js', array(), MH_THEME_VERSION , true);
             wp_enqueue_script( 'mh-utils-script', MH_THEME_DIR_URI . '/assets/js/mh-utils.js', array( 'jquery' ), time(), true );
             wp_enqueue_script( 'mh-main-script',  MH_THEME_DIR_URI . '/assets/js/mh-main.js', array( 'mh-utils-script' ), time(), true );

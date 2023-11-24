@@ -11,6 +11,10 @@ window.onload = function() {
     }
 }   
 
+/** mobile number mask */
+let mobileFields = jQuery('input[type="tel"]');
+mobileFields.mask('0000 000 000');
+
 /** Sign in error element ids  */
 
 var signInErrorIds = {
@@ -18,11 +22,97 @@ var signInErrorIds = {
     password:'signin-pass-error',
 }
 
+var signUpErrorIds = {
+    companyName: 'company-name-error',
+    primaryContactName: 'contact-name-error',
+    mobileNumber: 'mobile-error',
+    emailAddress: 'regis-email-error',
+    password: 'regis-pass-error',
+    address: 'address-error',
+    passportFile: 'passport-error',
+    passportNumber: 'passport-num-error',
+    passportExpDate: 'passport-exp-error',
+    drlFile: 'license-error',
+    drlNumber: 'dl-num-error',
+    drlExpDate: 'dl-exp-error'
+}
+
+var editErrorIds = {
+    companyName: 'edit-company-name-error',
+    primaryContactName: 'edit-contact-name-error',
+    mobileNumber: 'edit-mobile-error',
+    password: 'edit-regis-pass-error',
+    address: 'edit-address-error'
+}
+
 /** Validate email address */
 
 function validateEmailAddress( email ) {
     let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email.trim());
+}
+
+/** Validate mobile number */
+
+function validateMobileNumber( number ) {
+    const mobilePattern = /^0[2-45]\d{2}\s?\d{3}\s?\d{3}$/;
+    return mobilePattern.test(number);
+}
+
+/** Validate password */
+function validatePassword(password) {
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/;
+    return passwordPattern.test(password);
+}
+
+/** Validate alphanumeric */
+function isAlphanumeric(inputString) {
+    const alphanumericRegex = /^[a-zA-Z0-9-]+$/;
+    return alphanumericRegex.test(inputString);
+}
+
+/** Handle file upload */
+function handleFileUpload(event, filename, filesize) {
+    console.log(filename)
+    const fileInput = event.target;
+    const fileName = filename;
+    const fileSize = filesize;
+
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+
+      // Check file type
+      const allowedFileTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+      if (!allowedFileTypes.includes(file.type)) {
+        alert('Only JPG, JPEG, PNG, and PDF files are allowed.');
+        fileInput.value = ''; // Clear the file input
+        return;
+      }
+
+      // Check file size (max 10MB)
+      const maxSizeInBytes = 10 * 1024 * 1024; // 10MB
+      if (file.size > maxSizeInBytes) {
+        alert('File size exceeds the maximum allowed (10MB).');
+        fileInput.value = ''; // Clear the file input
+        return;
+      }
+      console.log(fileName)
+      // Display file information
+      fileName.innerHTML = `<p>File Name: ${file.name}</p>`;
+      fileSize.innerHTML = `<p>File Size: ${formatFileSize(file.size)}</p>`;
+      console.log(file.name);
+      console.log(formatFileSize(file.size))
+    }
+}
+
+function formatFileSize(size) {
+    const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    let i = 0;
+    while (size >= 1024 && i < units.length - 1) {
+        size /= 1024;
+        i++;
+    }
+    return `${size.toFixed(2)} ${units[i]}`;
 }
 
 /** Sanatize input */
@@ -41,6 +131,11 @@ function isEmpty( input ) {
         return true;
     }
     return false;
+}
+
+/** Validate empty input ftype file */
+function isFileInputEmpty(fileInput) {
+    return fileInput.files.length === 0;
 }
 
 /** Check errors objects all keys are empty.  */
@@ -87,7 +182,7 @@ function renderTopErrors(errorRef,message) {
 
 /** Render sign errors  */
 
-function renderSignInErrors( errors ) {
+function renderSignInErrors( errors, signInErrorIds ) {
     for (const key in errors) {
         if (errors.hasOwnProperty(key) && errors[key].trim() !== '') {
             let errorID = signInErrorIds[key];
