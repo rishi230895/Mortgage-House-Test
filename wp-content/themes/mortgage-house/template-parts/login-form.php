@@ -217,8 +217,8 @@
                         </div>
                         <button type="submit" class="btn btn-md btn-blue w-full capitalize">
                             <?php echo __( "Create profile", MH_THEME_DOMAIN );  ?>
-                            <?php get_template_part( 'template-parts/loader'); ?>
                         </button>
+                        <?php get_template_part( 'template-parts/loader'); ?>
                     </form>
                 </div>
             </div>

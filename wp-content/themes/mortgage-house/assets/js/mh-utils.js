@@ -23,6 +23,15 @@ var signInErrorIds = {
     password:'signin-pass-error',
 }
 
+
+var updateUser =  {
+    company_name : "edit-company-name-error",
+    primary_contact_name : "edit-contact-name-error",
+    mobile_number : "edit-mobile-error",
+    password: "edit-regis-pass-erro",
+    address: "edit-address-error",
+}
+
 var signUpErrorIds = {
     companyName: 'company-name-error',
     primaryContactName: 'contact-name-error',
@@ -242,7 +251,7 @@ async function handleSignIn( adminAjax , postData, nonce ) {
                         renderTopErrors( 'signin-top-error', data.message );
                     }
                     else {
-                        renderSignInErrors( data.fields_error , signUpErrorIds );
+                        renderSignInErrors( data.fields_error , signInErrorIds );
                     }  
                 }
             }
@@ -288,7 +297,7 @@ async function handleSignUp( adminAjax , formData, nonce ) {
                 renderTopErrors( 'signup-top-error', data.message );
             }
             else {
-                renderSignInErrors( data.fields_error );
+                renderSignInErrors( data.fields_error,signUpErrorIds );
             }  
         }
 
@@ -306,10 +315,14 @@ async function handleSignUp( adminAjax , formData, nonce ) {
                 }
             }
         }
+        loader.classList.remove('flex');
+         loader.classList.add('hidden');
 
     }
     catch(error) {
         console.log(error.message);
+        loader.classList.remove('flex');
+        loader.classList.add('hidden');
     }
 }
 
@@ -343,6 +356,8 @@ async function handleProfileUserUpdate( adminAjax , postData, nonce ) {
 
         if( ( ! data.success ) &&  ( data.error ) && ( data.fields_error.length > 0 ) ) {
 
+            cleanErrors(updateUser);
+            renderSignInErrors(data.fields_error, updateUser );
         }
         else {
             if( ( data.success ) &&  ( ! data.error )  ) {

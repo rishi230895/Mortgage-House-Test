@@ -48,7 +48,12 @@
             if( empty( $password  )  ) {
                 $is_error = true;
                 $error_lists['password'] = __('Password should not empty' , MH_THEME_DOMAIN );
+            }if (!email_exists($email)){
+                $is_error = true;
+                $error_lists['email'] = __("Email Address doesn't exists.", MH_THEME_DOMAIN );
             }
+
+
 
     
             if( ! $is_error  ) {
@@ -144,6 +149,14 @@
                     
                 }
 
+            }else{
+                $response['data'] = null;
+                $response['success'] = false;
+                $response['message'] = "";
+                $response['error'] = false;
+                $response['nonce_error'] = false;
+                $response['fields_error'] = $error_lists;
+                $response['redirect'] = "";
             }
         
             echo json_encode( $response );
@@ -367,7 +380,10 @@
                     $fields_error['drlExpDate'] = __("Invalid expiry date.", MH_THEME_DOMAIN );
                 }
             }
-
+            if (email_exists($email_address)){
+                $is_error = true;
+                $fields_error['emailAddress'] = __("Email Address already exists.", MH_THEME_DOMAIN );
+            }
             /** Errors */
 
             if(  ! $is_error  ) {
@@ -657,6 +673,7 @@ if( ! function_exists("mh_verify_otp")  )  {
 
         $ga = new PHPGangsta_GoogleAuthenticator();
         $secret = $ga->createSecret();
+       // echo $secret;
 
         /** Verify nonce  */
     
@@ -678,63 +695,72 @@ if( ! function_exists("mh_verify_otp")  )  {
         
         $otp_text = trim($_POST["otpText"]);
         $onecode = $_SESSION["onecode"];
+        $secret = $_SESSION["secret"];
 
-        $checkResult = $ga->verifyCode($secret, $onecode, 2);
+        try {
+         
+            $checkResult = $ga->verifyCode( $secret, $otp_text , 2);
+          //  var_dump( $checkResult);
     
-        if (  $onecode ) {
-  
-            $creds = array(
-                'user_login'    => $_SESSION['useremail'],
-                'user_password' => $_SESSION['password'],
-                'remember'      => true,
-            );
+            if (   $checkResult  ) {
+               
+                $creds = array(
+                    'user_login'    => $_SESSION['useremail'],
+                    'user_password' => $_SESSION['password'],
+                    'remember'      => true,
+                );
+        
+                $user = wp_signon($creds, false);
+        
+                if ( is_wp_error($user) ) {
+        
+                    $response['data'] = null;
+                    $response['success'] = false;
+                    $response['message'] = $user->get_error_message();
+                    $response['error'] = true;
+                    $response['nonce_error'] = false;
+                    $response['fields_error'] = $fields_error;
+                    $response['redirect'] = null;
     
-            $user = wp_signon($creds, false);
-    
-            if ( is_wp_error($user) ) {
-    
-                $response['data'] = null;
-                $response['success'] = false;
-                $response['message'] = $user->get_error_message();
-                $response['error'] = true;
-                $response['nonce_error'] = false;
-                $response['fields_error'] = $fields_error;
-                $response['redirect'] = null;
-
+                } 
+                else {
+        
+                    $response['data'] = null;
+                    $response['success'] = true;
+                    $response['message'] = "Verified.";
+                    $response['error'] = false;
+                    $response['nonce_error'] = false;
+                    $response['fields_error'] = $fields_error;
+                    $response['redirect'] = get_author_posts_url($user->ID);
+                }
             } 
             else {
-    
+        
                 $response['data'] = null;
-                $response['success'] = true;
-                $response['message'] = "Verified.";
-                $response['error'] = false;
-                $response['nonce_error'] = false;
+                $response['success'] = false;
+                $response['message'] = __("Passcode not match.", MH_THEME_DOMAIN);
+                $response['error'] = true;
+                $response['nonce_error'] = true;
                 $response['fields_error'] = $fields_error;
-                $response['redirect'] = get_author_posts_url($user->ID);
+                $response['redirect'] = null;
             }
-        } 
-        else {
+           
+            status_header(200);
     
-            $response['data'] = null;
-            $response['success'] = false;
-            $response['message'] = __("Passcode not match.", MH_THEME_DOMAIN);
-            $response['error'] = true;
-            $response['nonce_error'] = true;
-            $response['fields_error'] = $fields_error;
-            $response['redirect'] = null;
+            unset($_SESSION["secret"]);
+            unset($_SESSION["qrcode"]);
+            unset($_SESSION["onecode"]);
+            unset($_SESSION['useremail']);
+            unset($_SESSION['password']);
+          
+    
+            echo json_encode($response);
+            exit;
         }
-       
-        status_header(200);
+        catch(\Exception $e) {
+            echo $e->getMessage();
+        }
 
-        unset($_SESSION["secret"]);
-        unset($_SESSION["qrcode"]);
-        unset($_SESSION["onecode"]);
-        unset($_SESSION['useremail']);
-        unset($_SESSION['password']);
-        session_destroy();
-
-        echo json_encode($response);
-        exit;
     }
     
     add_action('wp_ajax_verify_otp_two_fa', 'mh_verify_otp');
