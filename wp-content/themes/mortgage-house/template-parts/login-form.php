@@ -102,7 +102,18 @@
                                     <?php echo __( "*", MH_THEME_DOMAIN );  ?>
                                 </span>
                             </label>
-                            <input class="mt-2" type="password" name="passwordregis" id="password-regis" autocomplete="off" placeholder="Password" />
+                            <div class="relative" x-data="{ showTooltip: false }">
+                                <input class="mt-2 pr-6" type="password" name="passwordregis" id="password-regis" autocomplete="off" placeholder="Password" />
+                                <i class="fa-solid fa-circle-info absolute top-1/2 -translate-y-1/2 right-2 cursor-pointer"
+                                    @mouseenter="showTooltip = true"
+                                    @mouseleave="showTooltip = false"
+                                    @touchstart="showTooltip = !showTooltip"
+                                    tabindex="-1"
+                                ></i>
+                                <span class="pass-tooltip absolute top-[95%] right-0 bg-gray-100 shadow-md p-3 text-xs w-full lg:w-1/2 rounded-lg" x-show="showTooltip">
+                                    Password must be 12-16 characters with at least one uppercase, lowercase, digit, and special character (can include spaces also)
+                                </span>
+                            </div>
                             <p class="invisible text-red-600 font-medium text-[10px] leading-[10px]" id="regis-pass-error">
                                 <?php echo __( "Password is mandatory", MH_THEME_DOMAIN );  ?>
                             </p>

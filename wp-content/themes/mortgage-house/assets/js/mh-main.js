@@ -52,9 +52,9 @@ if( signInForm ) {
             errors.password = 'Password is mandatory';
         }
         else {
-            if( password.length < 8 ) {
+            if( password.length < 12 ) {
                 isError =  true;
-                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
+                errors.password = 'Password must be 12-16 characters with at least one uppercase, lowercase, digit, and special character (can include spaces also)';
             } 
         }
 
@@ -181,7 +181,7 @@ if( signUpForm  ) {
         else {
             if( ! validatePassword(password) ) {
                 isError =  true;
-                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
+                errors.password = 'Password must be 12-16 characters with at least one uppercase, lowercase, digit, and special character (can include spaces also)';
                 console.log(errors.password)
             } 
         }
@@ -352,7 +352,7 @@ if( editForm ) {
         if( !isEmpty( password ) ) {
             if( ! validatePassword(password) ) {
                 isError =  true;
-                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
+                errors.password = 'Password must be 12-16 characters with at least one uppercase, lowercase, digit, and special character (can include spaces also)';
                 console.log(errors.password)
             } 
         }
