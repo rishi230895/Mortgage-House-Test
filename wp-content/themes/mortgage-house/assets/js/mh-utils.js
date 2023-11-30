@@ -127,17 +127,17 @@ function formatFileSize(size) {
 
 /** Sanatize input */
 
-function sanatizeInput( input ) {
+function sanatizeInput( field_val ) {
     let div = document.createElement('div');
-    div.innerHTML = input.trim();
+    div.innerHTML = field_val.trim();
     return div.textContent || div.innerText;
 }
 
 /** Validate input is empty */
 
-function isEmpty( input ) {
+function isEmpty( field_val ) {
     let emptyParameters = [null, undefined,''];
-    if ( emptyParameters.includes(input.trim()) ) {
+    if ( emptyParameters.includes(field_val.trim()) ) {
         return true;
     }
     return false;
