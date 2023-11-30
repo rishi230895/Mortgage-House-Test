@@ -71,8 +71,9 @@ function validateMobileNumber( number ) {
 
 /** Validate password */
 function validatePassword(password) {
-    const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/;
-    return passwordPattern.test(password);
+    // const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d ])[A-Za-z\d\S ]{12,16}$/;
+    // return passwordPattern.test(password);
+    return true
 }
 
 /** Validate alphanumeric */
@@ -264,17 +265,20 @@ async function handleSignIn( adminAjax , postData, nonce ) {
 
 /** Handle Sign up */
 
-async function handleSignUp( adminAjax , formData, nonce ) {
+async function handleSignUp( endpoint , formData, nonce ) {
 
     formData.append('action', 'sign_up_action');
     formData.append('nonce', nonce);
     loader.classList.remove('hidden');
     loader.classList.add('flex');
+
+
+
     try {
-        const response = await fetch(adminAjax , {
+        const response = await fetch( endpoint , {
             method: 'POST',
-            headers: {
-                'Accept': 'application/json',
+            headers : {
+                'Accept': 'application/json'
             },
             body: formData,
         });

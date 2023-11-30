@@ -70,3 +70,22 @@
 		}
 	}
 
+
+
+/** Register user create end point */
+
+if( ! function_exists("initialize_rest_api") ) {
+		
+	function initialize_rest_api() {
+		register_rest_route('mortgage/v2', '/register', array(
+			'methods'  => 'POST',
+			'callback' => 'mh_handle_signup',
+			'permission_callback' => '__return_true', 
+		));
+	}
+
+	add_action('rest_api_init', 'initialize_rest_api');
+}
+
+
+

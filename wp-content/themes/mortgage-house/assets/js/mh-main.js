@@ -47,16 +47,23 @@ if( signInForm ) {
 
         /** Validate Password */
 
-        if( isEmpty( password ) ) {
-            isError =  true;
-            errors.password = 'Password is mandatory';
-        }
-        else {
-            if( password.length < 8 ) {
-                isError =  true;
-                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
-            } 
-        }
+        // if( isEmpty( password ) ) {
+        //     isError =  true;
+        //     errors.password = 'Password is mandatory';
+        // }
+        // else {
+
+        //     if( password.length < 12 ) {
+        //         isError =  true;
+        //         errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 12 characters long';
+        //     } 
+
+        //     if( password.length > 16 ) {
+        //         isError =  true;
+        //         errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and should not be be 16 characters long';
+        //     } 
+
+        // }
 
         /** Fire sign in */
 
@@ -133,27 +140,24 @@ if( signUpForm  ) {
         if( isEmpty(companyName) ) {
             isError = true;
             errors.companyName = 'Company name is mandatory';
-            console.log(errors.companyName)
+           
         }
 
         // Validate primary contact name
         if( isEmpty(primaryContactName) ){
             isError = true;
             errors.primaryContactName = 'Primary contact name is mandatory';
-            console.log(errors.primaryContactName)
         }
 
         // Validate mobile number
         if( isEmpty( mobileNumber) ) {
             isError =  true;
             errors.mobileNumber = 'Mobile Number is mandatory';
-            console.log(errors.mobileNumber);
         }
         else {
             if( ! validateMobileNumber(mobileNumber) ) {
                 isError =  true;
                 errors.mobileNumber = 'Invalid mobile number';
-                console.log(errors.mobileNumber);
             }
         }
 
@@ -162,27 +166,24 @@ if( signUpForm  ) {
         if( isEmpty( emailAddress) ) {
             isError =  true;
             errors.emailAddress = 'Email Address is mandatory';
-            console.log(errors.emailAddress)
         }
         else {
             if( ! validateEmailAddress(emailAddress) ) {
                 isError =  true;
                 errors.email = 'Invalid email address.';
-                console.log(errors.email)
             }
         }
 
         /** Validate Password */
+
         if( isEmpty( password ) ) {
             isError =  true;
             errors.password = 'Password is mandatory';
-            console.log(errors.password)
         }
         else {
             if( ! validatePassword(password) ) {
                 isError =  true;
-                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
-                console.log(errors.password)
+                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 12 characters long';
             } 
         }
 
@@ -190,54 +191,50 @@ if( signUpForm  ) {
         if( isEmpty(address) ){
             isError = true;
             errors.address = 'Address is mandatory';
-            console.log(errors.address)
         }
 
         // Validate passport file
         if( isFileInputEmpty(passport) ){
             isError = true;
             errors.passportFile = 'Please upload your passport';
-            console.log(errors.passportFile);
         }
 
         // Validate passport number
         if( isEmpty(passportNumber) ){
             isError = true;
             errors.passportNumber = 'Passport number is mandatory';
-            console.log(errors.passportNumber);
-        }else{
+           
+        }
+        else{
             if( ! isAlphanumeric(passportNumber) ){
                 isError = true;
                 errors.passportNumber = 'Passport number must be alphanumeric';
-                console.log(errors.passportNumber)
             }
         }
 
         // Validate passport expiry date
+
         if( isEmpty(passportExpDate) ){
             isError = true;
             errors.passportExpDate = 'Please select your passport expiry date';
-            console.log(errors.passportExpDate);
         }
 
         // Validate driving license file
+
         if( isFileInputEmpty(dLicense) ){
             isError = true;
             errors.drlFile = 'Please upload your driving license';
-            console.log(errors.drlFile);
         }
 
         // Validate driving license number
         if( isEmpty(drlNumber) ){
             isError = true;
             errors.drlNumber = 'Driving license number is mandatory';
-            console.log(errors.drlNumber);
         }
         else{
             if( ! isAlphanumeric(drlNumber) ){
                 isError = true;
                 errors.drlNumber = 'Driving license number must be alphanumeric';
-                console.log(errors.drlNumber)
             }
         }
 
@@ -245,7 +242,6 @@ if( signUpForm  ) {
         if( isEmpty(drlExpDate) ){
             isError = true;
             errors.drlExpDate = 'Please select your driving license expiry date';
-            console.log(errors.drlExpDate);
         }
 
 
@@ -269,8 +265,11 @@ if( signUpForm  ) {
             formData.append( 'drl_file' , drlFile );
             formData.append( 'drl_number' , drlNumber );
             formData.append( 'drl_expt_date' , drlExpDate );
-            console.log(formData);
-            handleSignUp( mh_main_script_vars.ajax_url, formData , mh_main_script_vars.security );
+
+            let endPoint = mh_main_script_vars.site_url+'/wp-json/mortgage/v2/register';
+
+            handleSignUp( endPoint, formData , mh_main_script_vars.security );
+
 
         }else{
             renderSignInErrors(errors, signUpErrorIds);
@@ -323,27 +322,23 @@ if( editForm ) {
         if( isEmpty(companyName) ) {
             isError = true;
             errors.companyName = 'Company name is mandatory';
-            console.log(errors.companyName)
         }
 
         // Validate primary contact name
         if( isEmpty(primaryContactName) ){
             isError = true;
             errors.primaryContactName = 'Primary contact name is mandatory';
-            console.log(errors.primaryContactName)
         }
 
         // Validate mobile number
         if( isEmpty( mobileNumber) ) {
             isError =  true;
             errors.mobileNumber = 'Mobile Number is mandatory';
-            console.log(errors.mobileNumber);
         }
         else {
             if( ! validateMobileNumber(mobileNumber) ) {
                 isError =  true;
                 errors.mobileNumber = 'Invalid mobile number';
-                console.log(errors.mobileNumber);
             }
         }
 
@@ -352,8 +347,7 @@ if( editForm ) {
         if( !isEmpty( password ) ) {
             if( ! validatePassword(password) ) {
                 isError =  true;
-                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 8 characters long';
-                console.log(errors.password)
+                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 12 characters long';
             } 
         }
     
@@ -362,7 +356,6 @@ if( editForm ) {
         if( isEmpty(address) ) {
             isError = true;
             errors.address = 'Address is mandatory';
-            console.log( errors.address );
         }
 
         /** Post Form Data to the server.  */
@@ -414,11 +407,10 @@ if( verifyBtn ) {
             });
     
             if (! response.ok) {
-                console.log(`HTTP error! Status: ${response.status}`);
+                console.error(`HTTP error! Status: ${response.status}`);
             }
     
             const data = await response.json();
-            console.log(data);
 
             if( ( ! data.success ) &&  ( data.error ) && ( data.fields_error.length == 0 ) ) {
                 otpErrorRef.innerHTML = data.message;
@@ -431,7 +423,7 @@ if( verifyBtn ) {
             }
         }
         catch(err) {
-            console.log(err.message);
+            console.error(err.message);
         }
     });
 }
@@ -442,8 +434,9 @@ function isCheckboxChecked(id) {
     var checkbox = document.getElementById(id);
     if (checkbox.checked) {
         return true;
-    } else {
-        console.log(false);
+    } 
+    else {
+
         return false;
     }
 }
@@ -473,7 +466,7 @@ if( toggle ) {
             });
     
             if (! response.ok) {
-                console.log(`HTTP error! Status: ${response.status}`);
+                console.error(`HTTP error! Status: ${response.status}`);
             }
     
             const data = await response.json();

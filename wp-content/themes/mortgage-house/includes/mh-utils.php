@@ -71,8 +71,8 @@
 
         function mh_validate_password( $password ) {
 
-            $min_length = 8;
-            $max_length = 12;
+            $min_length = 12;
+            $max_length = 16;
 
             if (empty($password)) {
                 return false;
@@ -168,6 +168,8 @@
         function mh_file_upload_in_media(  $file  ) {
 
             $attachment_id = '';
+
+            error_log($file);
 
             if ( ! mh_validate_file_max_size( $file , 10 ) &&  mh_validate_file_format( $file  ) ) {
 

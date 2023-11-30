@@ -18,7 +18,8 @@
             wp_localize_script('mh-main-script', 'mh_main_script_vars', array(
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'security' => wp_create_nonce( 'mh-nonce' ),
-                'theme_url' => MH_THEME_DIR_URI
+                'theme_url' => MH_THEME_DIR_URI,
+                'site_url' => get_site_url()
             ));
 
             /** CSS Styles */
