@@ -11,9 +11,8 @@
     if( ! function_exists( 'mh_validate_aus_mobile_numb' ) ) {
         function mh_validate_aus_mobile_numb( $mobile_numb ) {
             if( ! empty ( $mobile_numb ) ) {
-
                 $number = str_replace(' ', '', $mobile_numb);
-                $pattern = '/^0[2-45]\d{2}\s?\d{3}\s?\d{3}$/';
+                $pattern = '/^(04|05)\d{2}\s?\d{3}\s?\d{3}$/';
 
                 return preg_match($pattern, $number);
             }
@@ -71,30 +70,7 @@
 
         function mh_validate_password( $password ) {
 
-            $min_length = 12;
-            $max_length = 16;
-
-            if (empty($password)) {
-                return false;
-            }
-
-            if (strlen($password) < $min_length || strlen($password) > $max_length) {
-                return false;
-            }
-
-            if (!preg_match('/[A-Z]/', $password)) {
-                return false;
-            }
-
-            if (!preg_match('/[a-z]/', $password)) {
-                return false;
-            }
-
-            if (!preg_match('/[0-9]/', $password)) {
-                return false;
-            }
-
-            if (!preg_match('/[\!\@\#\$\%\^\&\*\(\)\+\{\}\[\]\:\;\<\>\,\.\?\~\\\\-]/', $password)) {
+            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d ])[A-Za-z\d\S ]{12,16}$/', $password)) {
                 return false;
             }
 
@@ -169,7 +145,7 @@
 
             $attachment_id = '';
 
-            error_log($file);
+           // error_log($file);
 
             if ( ! mh_validate_file_max_size( $file , 10 ) &&  mh_validate_file_format( $file  ) ) {
 
@@ -191,9 +167,6 @@
                     );
         
                     $attachment_id = wp_insert_attachment($attachment, $file_path);
-                    $attachment_data = wp_generate_attachment_metadata($attachment_id, $file_path);
-                    wp_update_attachment_metadata( $attachment_id , $attachment_data);
-
                 }
                 else {
                     $attachment_id = '';

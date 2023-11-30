@@ -65,7 +65,7 @@ function validateEmailAddress( email ) {
 /** Validate mobile number */
 
 function validateMobileNumber( number ) {
-    const mobilePattern = /^0[2-45]\d{2}\s?\d{3}\s?\d{3}$/;
+    const mobilePattern = /^(04|05)\d{2}\s?\d{3}\s?\d{3}$/;
     return mobilePattern.test(number);
 }
 

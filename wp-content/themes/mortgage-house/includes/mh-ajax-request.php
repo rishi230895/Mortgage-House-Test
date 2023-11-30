@@ -181,8 +181,10 @@ if( ! function_exists('mh_handle_signup') ) {
 		$is_error = false;
 
 		/** Verify nonce  */
+        $nonce = $request->get_param('nonce');
+    
 
-        if ( ! isset( $request['nonce'] ) || ! wp_verify_nonce( $request['nonce'], 'mh-nonce' ) ) {
+        if ( ! isset($nonce) || ! wp_verify_nonce( $nonce, 'mh-nonce' ) ) {
 
             $response['data'] = null;
             $response['success'] = false;
@@ -193,8 +195,8 @@ if( ! function_exists('mh_handle_signup') ) {
             $response['fields_error'] = $fields_error;
             $response['redirect'] = null;
     
-            echo json_encode( $response );
-            exit;
+            return rest_ensure_response( $response );
+            
         }
 
 	
@@ -289,7 +291,6 @@ if( ! function_exists('mh_handle_signup') ) {
 			$is_error = true;
 			$fields_error['address'] = __("Address should not be empty.", MH_THEME_DOMAIN );
 		}
-
 
 		/** Validate Passport file  */
 
@@ -388,173 +389,119 @@ if( ! function_exists('mh_handle_signup') ) {
 			$fields_error['emailAddress'] = __("Email Address already exists.", MH_THEME_DOMAIN );
 		}
 
-
+       
 		/** Errors */
 
-		if(  ! $is_error  ) {
+        if(  ! $is_error  ) {
 
-			global $wpdb;
-			$table_name = $wpdb->prefix . 'users';
-
-			/** Preparing SQL Query */
-
-			$query = $wpdb->prepare(
-				"INSERT INTO $table_name (user_login, user_pass, user_email) VALUES (%s, %s, %s)",
-				$email_address,
-				wp_hash_password($password),
-				$email_address
-			);
-
-			$result = $wpdb->query($query);
-
-			
-
-			if ( $result === false ) {
-				
-				$response['data'] = null;
-				$response['success'] = false;
-				$response['message'] = $wpdb->last_error;
-				$response['error'] = true;
-				$response['nonce_error'] = true;
-				$response['fields_error'] = $fields_error;
-				$response['redirect'] = null;
-
-			} 
-			else {
-				
-				$user_id = $wpdb->insert_id;
-
-				if ( $user_id ) {
-
-					/** create user role. */
-					
-					$role = 'subscriber';
-
-					$is_role_updated = $wpdb->query(
-						$wpdb->prepare(
-							"INSERT INTO {$wpdb->prefix}usermeta (user_id, meta_key, meta_value) VALUES (%d, %s, %s)",
-							$user_id,
-							$wpdb->prefix . 'capabilities',
-							'a:1:{s:' . strlen($role) . ':"' . $role . '";b:1;}'
-						)
-					);
-
-				
-					if ( $is_role_updated === false) {
-						
-						$response['data'] = null;
-						$response['success'] = false;
-						$response['message'] = 'User is created, but role is not assigned.';
-						$response['error'] = true;
-						$response['nonce_error'] = true;
-						$response['fields_error'] = $fields_error;
-						$response['redirect'] = null;
+            $user_data = array(
+                'user_login' => $email_address,  
+                'user_pass'  => $password, 
+                'user_email' => $email_address, 
+                'role'       => 'subscriber', 
+            );
+            
+            // Create the user
 
 
-					} 
-					else {
+            $user_id = wp_insert_user($user_data);
+    
+            if ( ! is_wp_error($user_id) ) {
+                
+                $response['data'] = null;
+                $response['success'] = true;
+                $response['message'] = "User created successfully.";
+                $response['error'] = false;
+                $response['nonce_error'] = false;
+                $response['fields_error'] = $fields_error;
+                $response['redirect'] = get_author_posts_url( $user_id );
 
-						$response['data'] = null;
-						$response['success'] = true;
-						$response['message'] = "User created successfully.";
-						$response['error'] = false;
-						$response['nonce_error'] = false;
-						$response['fields_error'] = $fields_error;
-						$response['redirect'] = get_author_posts_url( $user_id );
+                /** Save Company info */
+               
+                $passport_attachment_id = mh_file_upload_in_media( $passport_file );
 
-						/** Save Company info */
-	
-						$passport_attachment_id = mh_file_upload_in_media( $passport_file );
-						$drl_attachment_id= mh_file_upload_in_media( $drl_file );
-	
-						$company_name = trim( sanitize_text_field( $_POST['company_name'] ) );
-						$primary_contact_name = trim ( sanitize_text_field( $_POST['primary_contact_name'] ) );
-						$mobile_number = trim(  sanitize_text_field( $_POST['mobile_number'] ) );
-						$email_address = trim($_POST['email_address']);
-						$password = $_POST['password'];
-						$address = strip_tags ( trim($_POST['address']) );
-			
+                $drl_attachment_id= mh_file_upload_in_media( $drl_file );
+
+                $company_name = trim( sanitize_text_field( $_POST['company_name'] ) );
+                $primary_contact_name = trim ( sanitize_text_field( $_POST['primary_contact_name'] ) );
+                $mobile_number = trim(  sanitize_text_field( $_POST['mobile_number'] ) );
+                $email_address = trim($_POST['email_address']);
+                $password = $_POST['password'];
+                $address = strip_tags ( trim($_POST['address']) );
+         
+    
+
+                add_user_meta( $user_id ,'company_name', $company_name);
+                add_user_meta( $user_id ,'primary_contact_name', $primary_contact_name );
+                add_user_meta( $user_id ,'mobile_number', $mobile_number );
+                add_user_meta( $user_id ,'email_address', $email_address);
+                add_user_meta( $user_id ,'address', $address);
+                
+                add_user_meta( $user_id ,'passport_file_attach_id', $passport_attachment_id);
+                add_user_meta( $user_id ,'passport_number', $passport_number );
+                add_user_meta( $user_id ,'passport_exp_date', $passport_exp_date );
+                
+                add_user_meta( $user_id ,'drl_file_attach_id', $drl_attachment_id);
+                add_user_meta( $user_id ,'drl_number', $drl_number );
+                add_user_meta( $user_id ,'drl_exp_date', $drl_exp_date );
+                add_user_meta( $user_id ,'switch_two_factor_auth', "on" );
+
+                $creds = array(
+                    'user_login'    => $email_address,
+                    'user_password' => $password,
+                    'remember'      => true,
+                );
+
+                $user = wp_signon( $creds, false );
+
+                if ( is_wp_error( $user )) {
+
+                    $response['data'] = null;
+                    $response['success'] = false;
+                    $response['message'] = 'User created ,'. $user->get_error_message();
+                    $response['error'] = true;
+                    $response['nonce_error'] = false;
+                    $response['fields_error'] = $fields_error;
+                    $response['redirect'] = null;
+                } 
+                else {
+                    $response['data'] = null;
+                    $response['success'] = true;
+                    $response['message'] = "User created.";
+                    $response['error'] = false;
+                    $response['nonce_error'] = false;
+                    $response['fields_error'] = $fields_error;
+                    $response['redirect'] = get_author_posts_url( $user_id );
+                }
+            } 
+            else {
+                
+                $response['data'] = null;
+                $response['success'] = false;
+                $response['message'] = $user_id->get_error_message();
+                $response['error'] = true;
+                $response['nonce_error'] = false;
+                $response['fields_error'] = $fields_error;
+                $response['redirect'] = null;
+            }
+        }
+        else {
+            $response['data'] = null;
+            $response['success'] = false;
+            $response['message'] = "";
+            $response['error'] = true;
+            $response['nonce_error'] = false;
+            $response['fields_error'] = $fields_error;
+            $response['redirect'] = null;
+        }
+
 		
-						add_user_meta( $user_id ,'company_name', $company_name);
-						add_user_meta( $user_id ,'primary_contact_name', $primary_contact_name );
-						add_user_meta( $user_id ,'mobile_number', $mobile_number );
-						add_user_meta( $user_id ,'email_address', $email_address);
-						add_user_meta( $user_id ,'address', $address);
-						
-						add_user_meta( $user_id ,'passport_file_attach_id', $passport_attachment_id);
-						add_user_meta( $user_id ,'passport_number', $passport_number );
-						add_user_meta( $user_id ,'passport_exp_date', $passport_exp_date );
-						
-						add_user_meta( $user_id ,'drl_file_attach_id', $drl_attachment_id);
-						add_user_meta( $user_id ,'drl_number', $drl_number );
-						add_user_meta( $user_id ,'drl_exp_date', $drl_exp_date );
-	
-						add_user_meta( $user_id ,'switch_two_factor_auth', "on" );
-
-						$creds = array(
-							'user_login'    => $email_address,
-							'user_password' => $password,
-							'remember'      => true,
-						);
-	
-						$user = wp_signon( $creds, false );
-	
-						if ( is_wp_error( $user )) {
-	
-							$response['data'] = null;
-							$response['success'] = false;
-							$response['message'] = 'User created ,'. $user->get_error_message();
-							$response['error'] = true;
-							$response['nonce_error'] = false;
-							$response['fields_error'] = $fields_error;
-							$response['redirect'] = null;
-	
-						} 
-						else {
-	
-							$response['data'] = null;
-							$response['success'] = true;
-							$response['message'] = "User created."; 
-							$response['error'] = false;
-							$response['nonce_error'] = false;
-							$response['fields_error'] = $fields_error;
-							$response['redirect'] = get_author_posts_url( $user_id );
-						}
-					}
-
-				} 
-				else {
-					
-					$response['data'] = null;
-					$response['success'] = false;
-					$response['message'] = 'User not created.';
-					$response['error'] = true;
-					$response['nonce_error'] = false;
-					$response['fields_error'] = $fields_error;
-					$response['redirect'] = null;
-				}
-
-
-			}                
-		}
-		else {
-
-			$response['data'] = null;
-			$response['success'] = false;
-			$response['message'] = "";
-			$response['error'] = true;
-			$response['nonce_error'] = false;
-			$response['fields_error'] = $fields_error;
-			$response['redirect'] = null;
-		}
 		
 		return rest_ensure_response( $response );
 		
 	}
 
 }
-
-
 
     /** Update User Profile */
     
