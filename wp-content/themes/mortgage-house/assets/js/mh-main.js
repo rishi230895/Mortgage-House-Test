@@ -47,23 +47,16 @@ if( signInForm ) {
 
         /** Validate Password */
 
-        // if( isEmpty( password ) ) {
-        //     isError =  true;
-        //     errors.password = 'Password is mandatory';
-        // }
-        // else {
-
-        //     if( password.length < 12 ) {
-        //         isError =  true;
-        //         errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 12 characters long';
-        //     } 
-
-        //     if( password.length > 16 ) {
-        //         isError =  true;
-        //         errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and should not be be 16 characters long';
-        //     } 
-
-        // }
+        if( isEmpty( password ) ) {
+            isError =  true;
+            errors.password = 'Password is mandatory';
+        }
+        else {
+            if( password.length < 12 ) {
+                isError =  true;
+                errors.password = 'Password must be 12-16 characters with at least one uppercase, lowercase, digit, and special character (can include spaces also)';
+            } 
+        }
 
         /** Fire sign in */
 
@@ -183,7 +176,8 @@ if( signUpForm  ) {
         else {
             if( ! validatePassword(password) ) {
                 isError =  true;
-                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 12 characters long';
+                errors.password = 'Password must be 12-16 characters with at least one uppercase, lowercase, digit, and special character (can include spaces also)';
+                console.log(errors.password)
             } 
         }
 
@@ -347,7 +341,8 @@ if( editForm ) {
         if( !isEmpty( password ) ) {
             if( ! validatePassword(password) ) {
                 isError =  true;
-                errors.password = 'Requires atleast 1 uppercase, 1 lowercase, 1 number, 1 special character, and be atleast 12 characters long';
+                errors.password = 'Password must be 12-16 characters with at least one uppercase, lowercase, digit, and special character (can include spaces also)';
+                console.log(errors.password)
             } 
         }
     

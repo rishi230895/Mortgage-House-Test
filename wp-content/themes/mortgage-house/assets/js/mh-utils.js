@@ -71,9 +71,8 @@ function validateMobileNumber( number ) {
 
 /** Validate password */
 function validatePassword(password) {
-    // const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d ])[A-Za-z\d\S ]{12,16}$/;
-    // return passwordPattern.test(password);
-    return true
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d ])[A-Za-z\d\S ]{12,16}$/;
+    return passwordPattern.test(password);
 }
 
 /** Validate alphanumeric */
